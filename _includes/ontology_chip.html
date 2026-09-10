@@ -1,0 +1,5 @@
+{%- comment -%}
+An ontology or vocabulary prefix, linked to its Bioregistry page.
+Usage: {% include ontology_chip.html prefix=o %}
+{%- endcomment -%}
+<a class="chip chip-link" href="https://bioregistry.io/registry/{{ include.prefix | downcase }}" title="{{ include.prefix }} in the Bioregistry">{{ include.prefix }}</a>

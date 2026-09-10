@@ -46,6 +46,8 @@ uv run mechregistry validate mech/dismech/dismech.md
 
 Validation is closed: an unknown field or an unrecognized enum value fails. Product ids must
 start with the Mech id and a dot. Cross-reference targets must be Mech ids in the registry.
+`make check-prefixes` confirms every ontology prefix resolves at the
+[Bioregistry](https://bioregistry.io/), which the site links each one to.
 
 ## Adding a Mech
 

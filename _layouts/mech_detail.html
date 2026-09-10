@@ -56,8 +56,8 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
   </div></div></div>
   <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
     <h5 class="card-title">Domains</h5>
-    <p class="card-text">{% for d in m.domains %}{% assign dd = site.data.schema.enums.DomainEnum.permissible_values[d] %}<a class="chip" href="{{ '/' | relative_url }}?domain={{ d | url_encode }}" title="{{ dd.description | strip | escape }}">{{ d }}</a>{% endfor %}</p>
-    {% if m.taxon %}<p class="card-text small">Taxa: {% for t in m.taxon %}{% assign tparts = t | split: ":" %}<a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ tparts[1] }}">{{ t }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</p>{% endif %}
+    <p class="card-text">{% for d in m.domains %}{% include domain_chip.html domain=d %}{% endfor %}</p>
+    {% if m.taxon %}<p class="card-text small">Taxa: {% for t in m.taxon %}<a class="chip chip-link" href="https://bioregistry.io/{{ t }}" title="{{ t }} through the Bioregistry resolver">{{ t }}</a>{% endfor %}</p>{% endif %}
   </div></div></div>
 </div>
 
@@ -70,7 +70,7 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
     {% if c.human_review %}{% assign hr = site.data.schema.enums.HumanReviewEnum.permissible_values[c.human_review] %}<tr><th>Human review</th><td><code>{{ c.human_review }}</code>. {{ hr.description | strip }}</td></tr>{% endif %}
     {% if c.agents %}<tr><th>Agents and tools</th><td>{{ c.agents | join: ", " }}</td></tr>{% endif %}
     {% if c.evidence_policy %}<tr><th>Evidence policy</th><td>{{ c.evidence_policy }}</td></tr>{% endif %}
-    {% if c.validation %}<tr><th>Validation in CI</th><td>{% for v in c.validation %}{% assign vd = site.data.schema.enums.ValidationEnum.permissible_values[v] %}<span class="chip" title="{{ vd.description | strip | escape }}">{{ v }}</span>{% endfor %}</td></tr>{% endif %}
+    {% if c.validation %}<tr><th>Validation in CI</th><td>{% for v in c.validation %}{% include enum_chip.html enum="ValidationEnum" value=v %}{% endfor %}</td></tr>{% endif %}
     {% if c.curation_history != nil %}<tr><th>Append-only history</th><td>{% if c.curation_history %}Yes{% else %}No{% endif %}</td></tr>{% endif %}
     {% if m.record_identifier_policy %}<tr><th>Record identifiers</th><td>{{ m.record_identifier_policy }}{% if m.identifier_prefix %} Minted prefix: <code>{{ m.identifier_prefix }}</code>.{% endif %}</td></tr>{% endif %}
   </tbody>
@@ -80,9 +80,9 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
 {% if m.features %}
 <div class="mech-section">
 <h2>Features</h2>
-<ul>
+<ul class="list-unstyled">
 {% for f in m.features %}{% assign fd = site.data.schema.enums.FeatureEnum.permissible_values[f] %}
-  <li><code>{{ f }}</code>{% if fd.description %}: {{ fd.description | strip }}{% endif %}</li>
+  <li class="mb-1">{% include enum_chip.html enum="FeatureEnum" value=f %}{% if fd.description %} {{ fd.description | strip }}{% endif %}</li>
 {% endfor %}
 </ul>
 </div>
@@ -90,8 +90,8 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
 
 {% if m.ontologies or m.data_sources %}
 <div class="mech-section">
-<h2>Grounding and sources</h2>
-{% if m.ontologies %}<p><strong>Ontologies and vocabularies:</strong> {% for o in m.ontologies %}<a class="chip" href="https://bioregistry.io/{{ o | downcase }}">{{ o }}</a>{% endfor %}</p>{% endif %}
+<h2 id="grounding">Grounding and sources</h2>
+{% if m.ontologies %}<p><strong>Ontologies and vocabularies:</strong> {% for o in m.ontologies %}{% include ontology_chip.html prefix=o %}{% endfor %}</p>{% endif %}
 {% if m.data_sources %}
 <table class="table table-sm" style="max-width: 52rem">
   <thead><tr><th>Source</th><th>Relation</th><th>What is taken</th></tr></thead>
@@ -99,7 +99,7 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
   {% for s in m.data_sources %}
     <tr>
       <td>{% if s.url %}<a href="{{ s.url }}">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</td>
-      <td><code>{{ s.relation_type | default: "prov:used" }}</code></td>
+      <td>{% assign rt = s.relation_type | default: "prov:used" %}{% include enum_chip.html enum="ProvenanceRelationEnum" value=rt %}</td>
       <td>{{ s.description }}</td>
     </tr>
   {% endfor %}
@@ -118,8 +118,8 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
   {% for p in m.products %}
     <tr>
       <td>{% if p.product_url %}<a href="{{ p.product_url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}<br/><code class="small">{{ p.id }}</code></td>
-      <td>{{ p.category }}</td>
-      <td>{{ p.format }}{% if p.compression %} ({{ p.compression }}){% endif %}{% if p.compatibility %}<br/><span class="small text-muted">{{ p.compatibility | join: ", " }}</span>{% endif %}</td>
+      <td>{% include enum_chip.html enum="ProductCategoryEnum" value=p.category %}</td>
+      <td>{% if p.format %}{% include enum_chip.html enum="FormatEnum" value=p.format %}{% endif %}{% if p.compression %} ({{ p.compression }}){% endif %}{% if p.compatibility %}<br/>{% for s in p.compatibility %}{% include enum_chip.html enum="StandardEnum" value=s %}{% endfor %}{% endif %}</td>
       <td>{{ p.description }}{% if p.node_count %}<br/><span class="small text-muted">{{ p.node_count }} nodes, {{ p.edge_count }} edges</span>{% endif %}{% if p.license %}<br/><span class="small">License: <a href="{{ p.license.id }}">{{ p.license.label }}</a></span>{% endif %}</td>
     </tr>
   {% endfor %}
@@ -133,7 +133,7 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
 <h2>Relations to other Mechs</h2>
 <ul>
 {% for r in m.cross_references %}{% assign rd = site.data.schema.enums.MechRelationEnum.permissible_values[r.relation] %}
-  <li><code title="{{ rd.description | strip | escape }}">{{ r.relation }}</code>
+  <li>{% include enum_chip.html enum="MechRelationEnum" value=r.relation %}
     <a href="{{ '/mech/' | append: r.target | append: '/' | append: r.target | append: '.html' | relative_url }}">{{ r.target }}</a>{% if r.description %}: {{ r.description }}{% endif %}</li>
 {% endfor %}
 </ul>
@@ -149,7 +149,7 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
 <ul>
 {% for other in incoming %}
   <li><a href="{{ '/mech/' | append: other.id | append: '/' | append: other.id | append: '.html' | relative_url }}">{{ other.name }}</a>
-  {% for r in other.cross_references %}{% if r.target == m.id %}<code>{{ r.relation }}</code>{% endif %}{% endfor %}</li>
+  {% for r in other.cross_references %}{% if r.target == m.id %}{% include enum_chip.html enum="MechRelationEnum" value=r.relation %}{% endif %}{% endfor %}</li>
 {% endfor %}
 </ul>
 </div>

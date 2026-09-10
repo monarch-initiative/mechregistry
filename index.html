@@ -93,8 +93,8 @@ title: MechRegistry
       </td>
       <td class="small">{{ m.record_type }}</td>
       <td class="text-end">{% if m.record_count %}{{ m.record_count }}{% else %}<span class="text-muted">?</span>{% endif %}</td>
-      <td>{% for d in m.domains %}<span class="chip">{{ d }}</span>{% endfor %}</td>
-      <td>{% for o in m.ontologies limit: 6 %}<span class="chip">{{ o }}</span>{% endfor %}{% if m.ontologies.size > 6 %}<span class="chip">+{{ m.ontologies.size | minus: 6 }}</span>{% endif %}</td>
+      <td>{% for d in m.domains %}{% include domain_chip.html domain=d %}{% endfor %}</td>
+      <td>{% for o in m.ontologies limit: 6 %}{% include ontology_chip.html prefix=o %}{% endfor %}{% if m.ontologies.size > 6 %}<a class="chip" href="{{ '/mech/' | append: m.id | append: '/' | append: m.id | append: '.html' | relative_url }}#grounding" title="All {{ m.ontologies.size }} ontologies on the Mech page">+{{ m.ontologies.size | minus: 6 }}</a>{% endif %}</td>
       <td>
         <span class="badge badge-status-{{ m.activity_status }}">{{ m.activity_status }}</span>
         {% if m.maturity %}<span class="badge badge-maturity">{{ m.maturity }}</span>{% endif %}

@@ -241,6 +241,47 @@ def config(args) -> int:
 
 
 # ----------------------------------------------------------------------------
+# Bioregistry prefix check
+# ----------------------------------------------------------------------------
+
+BIOREGISTRY_API = "https://bioregistry.io/api/registry/"
+
+
+def check_prefixes(args) -> int:
+    """Confirm every value in ``ontologies`` resolves at the Bioregistry.
+
+    The site links each ontology chip to ``https://bioregistry.io/registry/<prefix>``,
+    so a prefix the Bioregistry does not know is a dead link. Needs the network.
+    """
+    import json as _json
+    import urllib.error
+    import urllib.request
+
+    prefixes: dict[str, set[str]] = {}
+    for path in mech_files(args.files):
+        data = load_entry(path)
+        for prefix in data.get("ontologies", []) or []:
+            prefixes.setdefault(prefix, set()).add(data.get("id", path.stem))
+    failed = 0
+    for prefix in sorted(prefixes):
+        url = BIOREGISTRY_API + prefix.lower()
+        try:
+            with urllib.request.urlopen(url, timeout=30) as resp:
+                record = _json.load(resp)
+            canonical = record.get("prefix")
+            note = "" if canonical == prefix.lower() else f" (Bioregistry canonical: {canonical})"
+            print(f"ok   {prefix}{note}")
+        except urllib.error.HTTPError as exc:
+            failed += 1
+            print(f"FAIL {prefix}: HTTP {exc.code} at {url}; used by {', '.join(sorted(prefixes[prefix]))}")
+        except Exception as exc:  # noqa: BLE001
+            failed += 1
+            print(f"FAIL {prefix}: {exc}")
+    print(f"{len(prefixes)} prefixes checked, {failed} unresolved")
+    return 1 if failed else 0
+
+
+# ----------------------------------------------------------------------------
 # Schema docs
 # ----------------------------------------------------------------------------
 
@@ -311,6 +352,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--registry", default=str(REGISTRY_DIR / "mechs.yml"))
     p.add_argument("--output", default=str(ROOT / "_config.yml"))
     p.set_defaults(func=config)
+
+    p = sub.add_parser("check-prefixes", help="check ontology prefixes against the Bioregistry")
+    p.add_argument("files", nargs="*")
+    p.set_defaults(func=check_prefixes)
 
     p = sub.add_parser("fix-schema-docs", help="make gen-doc output renderable by Jekyll")
     p.add_argument("dir", nargs="?", default=str(ROOT / "docs" / "schema"))

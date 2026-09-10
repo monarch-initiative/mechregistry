@@ -1,0 +1,10 @@
+{%- comment -%}
+A domain, linked to its MeSH or NCIT meaning through the Bioregistry resolver.
+Usage: {% include domain_chip.html domain=d %}
+{%- endcomment -%}
+{%- assign dd = site.data.schema.enums.DomainEnum.permissible_values[include.domain] -%}
+{%- if dd.meaning -%}
+<a class="chip chip-link" href="https://bioregistry.io/{{ dd.meaning }}" title="{{ dd.description | strip | escape }} ({{ dd.meaning }})">{{ include.domain }}</a>
+{%- else -%}
+<a class="chip chip-link" href="{{ '/docs/schema/DomainEnum.html' | relative_url }}" title="{{ dd.description | strip | escape }}">{{ include.domain }}</a>
+{%- endif -%}

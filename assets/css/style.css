@@ -13,6 +13,8 @@ a:hover { text-decoration: underline; }
 .badge-status-inactive, .badge-status-orphaned, .badge-status-unresponsive, .badge-status-unknown { background: #8d6e63; }
 .badge-maturity { background: #5c6bc0; }
 .chip { display: inline-block; font-size: .78rem; padding: .05rem .45rem; margin: .1rem .15rem .1rem 0; border-radius: .6rem; background: #eef1f5; color: #333; }
+.chip-link:hover { background: #dbe4f0; text-decoration: none; }
+.chip-link { border-bottom: 1px dotted #8a97a8; }
 
 .header-card-row .card-title { font-size: .95rem; color: #6c757d; text-transform: uppercase; letter-spacing: .03em; }
 .mech-section h2 { font-size: 1.35rem; margin-top: 2rem; border-bottom: 1px solid #dee2e6; padding-bottom: .25rem; }

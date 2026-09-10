@@ -24,6 +24,8 @@ jobs:
         run: make all
       - name: Tests
         run: make test
+      - name: Check ontology prefixes against the Bioregistry
+        run: make check-prefixes
       - name: Build the Jekyll site
         uses: actions/jekyll-build-pages@v1
         with:

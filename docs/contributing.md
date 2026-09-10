@@ -32,6 +32,19 @@ uv run mechregistry validate mech/<id>/<id>.md
 
 6. Open a pull request. CI validates every entry and builds the site.
 
+## Ontology prefixes
+
+Values in `ontologies` are Bioregistry prefixes. The site links every one to
+`https://bioregistry.io/registry/<prefix>`, so a prefix the
+[Bioregistry](https://bioregistry.io/) does not know is a dead link. Check with:
+
+```bash
+make check-prefixes
+```
+
+Use the conventional capitalization (`CHEBI`, `NCBITaxon`, `UniProt`). Lookups are
+case-insensitive.
+
 ## Keep counts honest
 
 `record_count` counts records in the canonical corpus, not files in the

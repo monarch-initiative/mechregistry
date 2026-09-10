@@ -1,0 +1,6 @@
+{%- comment -%}
+A permissible value of a schema enum, linked to the enum's schema page.
+Usage: {% include enum_chip.html enum="ValidationEnum" value=v %}
+{%- endcomment -%}
+{%- assign ed = site.data.schema.enums[include.enum].permissible_values[include.value] -%}
+<a class="chip chip-link" href="{{ '/docs/schema/' | append: include.enum | append: '.html' | relative_url }}" title="{{ ed.description | strip | escape }}">{{ include.value }}</a>

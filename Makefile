@@ -14,7 +14,7 @@ SCHEMA_JSON = src/mechregistry/schema/mechregistry.schema.json
 SCHEMA_DOC_DIR = docs/schema
 MECHS := $(shell find mech -type f -name '*.md' | LC_ALL=C sort)
 
-.PHONY: all validate prettify clean schema-docs test lint site serve
+.PHONY: all validate validate-file prettify check-prefixes clean schema-docs test lint site serve
 
 all: validate registry/mechs.yml _config.yml _data/schema.yaml schema-docs
 
@@ -28,6 +28,11 @@ validate-file:
 
 prettify:
 	$(RUN) mechregistry prettify
+
+# Every ontology prefix in the entries must resolve at the Bioregistry,
+# because the site links each one there. Needs the network.
+check-prefixes:
+	$(RUN) mechregistry check-prefixes
 
 registry/mechs.yml: $(MECHS) $(SCHEMA)
 	$(RUN) mechregistry concat
