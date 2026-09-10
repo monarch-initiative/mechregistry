@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<div class="row">
+  <div class="col-12 schema-doc">
+    <p class="text-muted small"><a href="{{ '/docs/schema/' | relative_url }}">Schema index</a></p>
+    {{ content }}
+  </div>
+</div>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  document.querySelectorAll("pre code.language-mermaid, pre > code.mermaid").forEach(function (el) {
+    var pre = el.parentElement;
+    var div = document.createElement("pre");
+    div.className = "mermaid";
+    div.textContent = el.textContent;
+    pre.replaceWith(div);
+  });
+  mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+</script>

@@ -1,0 +1,197 @@
+---
+layout: default
+---
+{%- comment -%}
+Jekyll reserves page.name for the file name, so read the entry from site.mechs
+(generated into _config.yml from the same front matter) and fall back to page.
+{%- endcomment -%}
+{%- assign m = site.mechs | where: "id", page.id | first -%}
+{%- unless m -%}{%- assign m = page -%}{%- endunless -%}
+<div class="row">
+  <div class="col">
+    <h1><i class="bi bi-diagram-3"></i> {{ m.name }}
+      <small class="text-muted fs-5">{{ m.id }}</small></h1>
+    <p>
+      <span class="badge badge-status-{{ m.activity_status }}">{{ m.activity_status }}</span>
+      {% if m.maturity %}{% assign md = site.data.schema.enums.MaturityEnum.permissible_values[m.maturity] %}<span class="badge badge-maturity" title="{{ md.description | strip | escape }}">{{ m.maturity }}</span>{% endif %}
+      {% for c in m.collection %}{% assign cd = site.data.schema.enums.CollectionEnum.permissible_values[c] %}<a class="badge bg-secondary" href="{{ '/' | relative_url }}?collection={{ c }}" title="{{ cd.description | strip | escape }}">{{ c }}</a>{% endfor %}
+      {% if m.version %}<span class="badge bg-light text-dark">version {{ m.version }}</span>{% endif %}
+    </p>
+    {% if m.synonyms %}<p class="small text-muted">Also known as: {{ m.synonyms | join: ", " }}</p>{% endif %}
+    <div style="max-width: 52rem">{{ m.description | markdownify }}</div>
+  </div>
+</div>
+
+{% if m.activity_status != "active" %}
+<div class="alert alert-warning" role="alert" style="max-width: 52rem">
+  This Mech is {{ m.activity_status }}. {% assign sd = site.data.schema.enums.ActivityStatusEnum.permissible_values[m.activity_status] %}{{ sd.description }}
+</div>
+{% endif %}
+{% for w in m.warnings %}
+<div class="alert alert-danger" role="alert" style="max-width: 52rem">{{ w }}</div>
+{% endfor %}
+{% if m.disclaimer %}
+<div class="alert alert-light mech-disclaimer" role="note" style="max-width: 52rem">
+  <strong>Disclaimer from the Mech.</strong> {{ m.disclaimer }}
+</div>
+{% endif %}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 header-card-row mt-1">
+  <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
+    <h5 class="card-title">One record is</h5>
+    <p class="card-text">{{ m.record_type }}</p>
+    {% if m.record_count %}<p class="card-text"><strong>{{ m.record_count }}</strong> records{% if m.record_count_date %} <span class="text-muted small">as of {{ m.record_count_date }}</span>{% endif %}</p>{% endif %}
+  </div></div></div>
+  <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
+    <h5 class="card-title">Links</h5>
+    <p class="card-text mb-1">{% if m.homepage_url %}<i class="bi bi-house"></i> <a href="{{ m.homepage_url }}">Homepage</a>{% else %}<span class="text-muted">No homepage</span>{% endif %}</p>
+    <p class="card-text mb-1"><i class="bi bi-github"></i> <a href="{{ m.repository }}">Repository</a></p>
+    {% if m.schema_url %}<p class="card-text mb-1"><i class="bi bi-file-earmark-code"></i> <a href="{{ m.schema_url }}">LinkML schema</a></p>{% endif %}
+    {% if m.curation.curation_guide_url %}<p class="card-text mb-1"><i class="bi bi-book"></i> <a href="{{ m.curation.curation_guide_url }}">Curation guide</a></p>{% endif %}
+  </div></div></div>
+  <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
+    <h5 class="card-title">License</h5>
+    {% if m.license %}<p class="card-text mb-1">Records: <a href="{{ m.license.id }}">{{ m.license.label }}</a></p>{% else %}<p class="card-text text-danger fw-bold">No license recorded</p>{% endif %}
+    {% if m.code_license %}<p class="card-text mb-1">Code: <a href="{{ m.code_license.id }}">{{ m.code_license.label }}</a></p>{% endif %}
+  </div></div></div>
+  <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
+    <h5 class="card-title">Domains</h5>
+    <p class="card-text">{% for d in m.domains %}{% assign dd = site.data.schema.enums.DomainEnum.permissible_values[d] %}<a class="chip" href="{{ '/' | relative_url }}?domain={{ d | url_encode }}" title="{{ dd.description | strip | escape }}">{{ d }}</a>{% endfor %}</p>
+    {% if m.taxon %}<p class="card-text small">Taxa: {% for t in m.taxon %}{% assign tparts = t | split: ":" %}<a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ tparts[1] }}">{{ t }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</p>{% endif %}
+  </div></div></div>
+</div>
+
+<div class="mech-section">
+<h2>Curation model</h2>
+{% assign c = m.curation %}
+<table class="table table-sm" style="max-width: 52rem">
+  <tbody>
+    <tr><th style="width: 14rem">Agent-curated</th><td>{% if c.agent_curated %}Yes. AI agents generate or maintain most of the content.{% else %}No.{% endif %}</td></tr>
+    {% if c.human_review %}{% assign hr = site.data.schema.enums.HumanReviewEnum.permissible_values[c.human_review] %}<tr><th>Human review</th><td><code>{{ c.human_review }}</code>. {{ hr.description | strip }}</td></tr>{% endif %}
+    {% if c.agents %}<tr><th>Agents and tools</th><td>{{ c.agents | join: ", " }}</td></tr>{% endif %}
+    {% if c.evidence_policy %}<tr><th>Evidence policy</th><td>{{ c.evidence_policy }}</td></tr>{% endif %}
+    {% if c.validation %}<tr><th>Validation in CI</th><td>{% for v in c.validation %}{% assign vd = site.data.schema.enums.ValidationEnum.permissible_values[v] %}<span class="chip" title="{{ vd.description | strip | escape }}">{{ v }}</span>{% endfor %}</td></tr>{% endif %}
+    {% if c.curation_history != nil %}<tr><th>Append-only history</th><td>{% if c.curation_history %}Yes{% else %}No{% endif %}</td></tr>{% endif %}
+    {% if m.record_identifier_policy %}<tr><th>Record identifiers</th><td>{{ m.record_identifier_policy }}{% if m.identifier_prefix %} Minted prefix: <code>{{ m.identifier_prefix }}</code>.{% endif %}</td></tr>{% endif %}
+  </tbody>
+</table>
+</div>
+
+{% if m.features %}
+<div class="mech-section">
+<h2>Features</h2>
+<ul>
+{% for f in m.features %}{% assign fd = site.data.schema.enums.FeatureEnum.permissible_values[f] %}
+  <li><code>{{ f }}</code>{% if fd.description %}: {{ fd.description | strip }}{% endif %}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+{% if m.ontologies or m.data_sources %}
+<div class="mech-section">
+<h2>Grounding and sources</h2>
+{% if m.ontologies %}<p><strong>Ontologies and vocabularies:</strong> {% for o in m.ontologies %}<a class="chip" href="https://bioregistry.io/{{ o | downcase }}">{{ o }}</a>{% endfor %}</p>{% endif %}
+{% if m.data_sources %}
+<table class="table table-sm" style="max-width: 52rem">
+  <thead><tr><th>Source</th><th>Relation</th><th>What is taken</th></tr></thead>
+  <tbody>
+  {% for s in m.data_sources %}
+    <tr>
+      <td>{% if s.url %}<a href="{{ s.url }}">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</td>
+      <td><code>{{ s.relation_type | default: "prov:used" }}</code></td>
+      <td>{{ s.description }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+</div>
+{% endif %}
+
+{% if m.products %}
+<div class="mech-section">
+<h2>Products</h2>
+<table class="table table-sm">
+  <thead><tr><th>Product</th><th>Kind</th><th>Format</th><th>Description</th></tr></thead>
+  <tbody>
+  {% for p in m.products %}
+    <tr>
+      <td>{% if p.product_url %}<a href="{{ p.product_url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}<br/><code class="small">{{ p.id }}</code></td>
+      <td>{{ p.category }}</td>
+      <td>{{ p.format }}{% if p.compression %} ({{ p.compression }}){% endif %}{% if p.compatibility %}<br/><span class="small text-muted">{{ p.compatibility | join: ", " }}</span>{% endif %}</td>
+      <td>{{ p.description }}{% if p.node_count %}<br/><span class="small text-muted">{{ p.node_count }} nodes, {{ p.edge_count }} edges</span>{% endif %}{% if p.license %}<br/><span class="small">License: <a href="{{ p.license.id }}">{{ p.license.label }}</a></span>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if m.cross_references %}
+<div class="mech-section">
+<h2>Relations to other Mechs</h2>
+<ul>
+{% for r in m.cross_references %}{% assign rd = site.data.schema.enums.MechRelationEnum.permissible_values[r.relation] %}
+  <li><code title="{{ rd.description | strip | escape }}">{{ r.relation }}</code>
+    <a href="{{ '/mech/' | append: r.target | append: '/' | append: r.target | append: '.html' | relative_url }}">{{ r.target }}</a>{% if r.description %}: {{ r.description }}{% endif %}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+{%- comment -%} Reverse links: any Mech that points at this one. {%- endcomment -%}
+{% assign incoming = "" | split: "" %}
+{% for other in site.mechs %}{% for r in other.cross_references %}{% if r.target == m.id %}{% assign incoming = incoming | push: other %}{% break %}{% endif %}{% endfor %}{% endfor %}
+{% if incoming.size > 0 %}
+<div class="mech-section">
+<h2>Referenced by</h2>
+<ul>
+{% for other in incoming %}
+  <li><a href="{{ '/mech/' | append: other.id | append: '/' | append: other.id | append: '.html' | relative_url }}">{{ other.name }}</a>
+  {% for r in other.cross_references %}{% if r.target == m.id %}<code>{{ r.relation }}</code>{% endif %}{% endfor %}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+{% if m.publications %}
+<div class="mech-section">
+<h2>Publications</h2>
+<ul>
+{% for pub in m.publications %}
+  <li>{% if pub.authors %}{{ pub.authors | join: ", " }}. {% endif %}{% if pub.title %}<em>{{ pub.title }}</em>. {% endif %}{% if pub.journal %}{{ pub.journal }}. {% endif %}{% if pub.year %}{{ pub.year }}. {% endif %}
+    {% if pub.doi %}<a href="https://doi.org/{{ pub.doi }}">doi:{{ pub.doi }}</a>{% elsif pub.id contains "http" %}<a href="{{ pub.id }}">{{ pub.id }}</a>{% else %}{{ pub.id }}{% endif %}
+    {% if pub.preferred %}<span class="badge bg-info text-dark">preferred citation</span>{% endif %}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+{% if m.contacts %}
+<div class="mech-section">
+<h2>Contacts</h2>
+<ul>
+{% for ct in m.contacts %}
+  <li><strong>{{ ct.label }}</strong> <span class="text-muted small">({{ ct.category }})</span>
+    {% if ct.orcid %}<a href="https://orcid.org/{{ ct.orcid }}" class="small">ORCID {{ ct.orcid }}</a>{% endif %}
+    {% for d in ct.contact_details %}
+      {% if d.contact_type == "email" %}<a class="small ms-1" href="mailto:{{ d.value }}"><i class="bi bi-envelope"></i> {{ d.value }}</a>
+      {% elsif d.contact_type == "github" %}<a class="small ms-1" href="https://github.com/{{ d.value }}"><i class="bi bi-github"></i> {{ d.value }}</a>
+      {% else %}<a class="small ms-1" href="{{ d.value }}"><i class="bi bi-link-45deg"></i> {{ d.value }}</a>{% endif %}
+    {% endfor %}
+  </li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+<div class="mech-section">
+<h2>Registry entry</h2>
+<p class="small text-muted">
+  {% if m.creation_date %}Created {{ m.creation_date }}.{% endif %}
+  {% if m.last_modified_date %}Last modified {{ m.last_modified_date }}.{% endif %}
+  <a href="{{ site.repo_src }}mech/{{ m.id }}/{{ m.id }}.md">Edit this entry on GitHub</a>.
+</p>
+{{ content }}
+</div>

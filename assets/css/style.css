@@ -1,0 +1,28 @@
+html, body { height: 100%; }
+body { display: flex; flex-flow: column; min-width: 0; }
+main.site-container { flex: 1 0 auto; padding-top: 1.25rem; padding-bottom: 2rem; }
+.footer { background: #f8f9fa; }
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.registry-filter-bar { display: flex; flex-wrap: wrap; gap: .75rem; }
+.registry-filter { min-width: 11rem; }
+#mech-table td, #mech-table th { vertical-align: top; }
+#mech-table .desc { max-width: 34rem; }
+.badge-status-active { background: #2e7d32; }
+.badge-status-inactive, .badge-status-orphaned, .badge-status-unresponsive, .badge-status-unknown { background: #8d6e63; }
+.badge-maturity { background: #5c6bc0; }
+.chip { display: inline-block; font-size: .78rem; padding: .05rem .45rem; margin: .1rem .15rem .1rem 0; border-radius: .6rem; background: #eef1f5; color: #333; }
+
+.header-card-row .card-title { font-size: .95rem; color: #6c757d; text-transform: uppercase; letter-spacing: .03em; }
+.mech-section h2 { font-size: 1.35rem; margin-top: 2rem; border-bottom: 1px solid #dee2e6; padding-bottom: .25rem; }
+.mech-disclaimer { border-left: 4px solid #e0a800; }
+.doc-sidebar { position: sticky; top: 1rem; }
+.doc-sidebar .nav-section-title { font-weight: 600; font-size: .85rem; text-transform: uppercase; color: #6c757d; margin-bottom: .5rem; }
+.doc-sidebar .nav-link { padding: .25rem .5rem; color: #495057; border-left: 2px solid transparent; }
+.doc-sidebar .nav-link.active { color: #0d6efd; border-left-color: #0d6efd; }
+.doc-content { max-width: 52rem; }
+.schema-doc table { font-size: .9rem; }
+.stat-row .stat { min-width: 8rem; }
+.stat-row .stat .num { font-size: 1.6rem; font-weight: 600; line-height: 1.1; }
+.stat-row .stat .lbl { font-size: .8rem; color: #6c757d; text-transform: uppercase; }

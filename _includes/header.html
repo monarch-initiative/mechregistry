@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ '/' | relative_url }}">
+      <img src="{{ '/images/favicon.svg' | relative_url }}" alt="" width="24" height="24" class="me-1 align-text-bottom">
+      MechRegistry
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+      aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{{ '/' | relative_url }}">Mechs</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ '/docs/what-is-a-mech.html' | relative_url }}">What is a Mech?</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ '/docs/' | relative_url }}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ '/docs/schema/' | relative_url }}">Schema</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ '/docs/contributing.html' | relative_url }}">Contribute</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ site.repo }}"><i class="bi bi-github"></i> GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

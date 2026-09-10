@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<div class="row">
+  <div class="col-lg-9 doc-content">
+    {{ content }}
+  </div>
+  <div class="col-lg-3">
+    <nav class="doc-sidebar">
+      <div class="nav-section-title">Documentation</div>
+      <div class="nav flex-column">
+        <a class="nav-link{% if page.url == '/docs/' or page.url == '/docs/index.html' %} active{% endif %}" href="{{ '/docs/' | relative_url }}">About</a>
+        <a class="nav-link{% if page.url contains '/docs/what-is-a-mech' %} active{% endif %}" href="{{ '/docs/what-is-a-mech.html' | relative_url }}">What is a Mech?</a>
+        <a class="nav-link{% if page.url contains '/docs/contributing' %} active{% endif %}" href="{{ '/docs/contributing.html' | relative_url }}">Contributing</a>
+        <a class="nav-link{% if page.url contains '/docs/schema' %} active{% endif %}" href="{{ '/docs/schema/' | relative_url }}">Schema</a>
+        <a class="nav-link" href="{{ '/registry/mechs.yml' | relative_url }}">Download (YAML)</a>
+        <a class="nav-link" href="{{ '/registry/mechs.json' | relative_url }}">Download (JSON)</a>
+      </div>
+    </nav>
+  </div>
+</div>

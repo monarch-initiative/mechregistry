@@ -1,0 +1,96 @@
+name: Suggest a new Mech
+description: Ask for a Mech to be added to MechRegistry.
+title: "Add this Mech: [name]"
+labels: [new-mech]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        A Mech is an AI agent-curated knowledge base with one validated,
+        ontology-grounded, evidence-backed record per entity, a LinkML schema
+        and a curation history. Not every field below is required. The more you
+        give, the better the entry.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      placeholder: e.g. TraitMech
+    validations:
+      required: true
+  - type: input
+    id: repository
+    attributes:
+      label: Repository URL
+      placeholder: https://github.com/org/name
+    validations:
+      required: true
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage or browser URL
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A paragraph on what the Mech holds and how it is built.
+    validations:
+      required: true
+  - type: input
+    id: record_type
+    attributes:
+      label: What one record represents
+      placeholder: e.g. a microbial ecophysiological trait
+    validations:
+      required: true
+  - type: input
+    id: record_count
+    attributes:
+      label: Record count and date
+      placeholder: e.g. 491 as of 2026-09-10
+  - type: input
+    id: schema
+    attributes:
+      label: LinkML schema URL
+  - type: input
+    id: ontologies
+    attributes:
+      label: Ontologies used to ground records
+      placeholder: e.g. CHEBI, GO, ENVO, NCBITaxon
+  - type: input
+    id: license
+    attributes:
+      label: License of the records
+      placeholder: e.g. CC0 1.0
+  - type: dropdown
+    id: agent_curated
+    attributes:
+      label: Do AI agents generate or maintain most of the content?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  - type: dropdown
+    id: human_review
+    attributes:
+      label: Human review
+      options:
+        - Pull request review
+        - Spot check after merge
+        - None
+        - Not documented
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence policy
+      description: What must a claim carry? Which validators run?
+  - type: input
+    id: contact
+    attributes:
+      label: Contact
+      placeholder: Name, email or GitHub handle
+  - type: textarea
+    id: relations
+    attributes:
+      label: Relations to other Mechs
+      description: Which Mechs does it consume from, provide to, or hand off to?

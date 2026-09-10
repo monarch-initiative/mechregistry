@@ -1,0 +1,110 @@
+---
+layout: default
+title: MechRegistry
+---
+<div class="row">
+  <div class="col">
+    <h1 class="display-6">MechRegistry
+      <br/><small class="text-muted">A registry of Mechs: AI agent-curated knowledge bases.</small>
+    </h1>
+    <p class="mt-2" style="max-width: 48rem">
+      A Mech keeps one validated, ontology-grounded, evidence-backed record per entity, with a LinkML
+      schema and an append-only curation history. AI agents write most of it and people review it.
+      The canonical Mech is <a href="{{ '/mech/dismech/dismech.html' | relative_url }}">DisMech</a>.
+      <a href="{{ '/docs/what-is-a-mech.html' | relative_url }}">What is a Mech?</a>
+    </p>
+    <p><a href="{{ site.repo }}/issues/new?template=new-mech.yml">Are we missing one? Suggest a Mech.</a></p>
+  </div>
+</div>
+
+<div class="d-flex flex-wrap gap-4 stat-row mb-3">
+  {% assign total_records = 0 %}
+  {% assign active_count = 0 %}
+  {% for m in site.mechs %}
+    {% if m.record_count %}{% assign total_records = total_records | plus: m.record_count %}{% endif %}
+    {% if m.activity_status == "active" %}{% assign active_count = active_count | plus: 1 %}{% endif %}
+  {% endfor %}
+  <div class="stat"><div class="num">{{ site.mechs | size }}</div><div class="lbl">Mechs</div></div>
+  <div class="stat"><div class="num">{{ active_count }}</div><div class="lbl">Active</div></div>
+  <div class="stat"><div class="num">{{ total_records }}</div><div class="lbl">Records, summed</div></div>
+</div>
+
+<div class="small mb-2">
+  Download registry [
+  <a href="{{ '/registry/mechs.yml' | relative_url }}">YAML</a> |
+  <a href="{{ '/registry/mechs.json' | relative_url }}">JSON</a> |
+  <a href="{{ '/registry/mechs-summary.json' | relative_url }}">summary JSON</a>
+  ]
+</div>
+
+<div class="registry-filter-bar mb-3">
+  <div class="registry-filter">
+    <label for="f-domain" class="form-label small mb-0">Domain</label>
+    <select id="f-domain" class="form-select form-select-sm"><option value="">All domains</option></select>
+  </div>
+  <div class="registry-filter">
+    <label for="f-collection" class="form-label small mb-0">Collection</label>
+    <select id="f-collection" class="form-select form-select-sm"><option value="">All collections</option></select>
+  </div>
+  <div class="registry-filter">
+    <label for="f-status" class="form-label small mb-0">Status</label>
+    <select id="f-status" class="form-select form-select-sm"><option value="">All statuses</option></select>
+  </div>
+  <div class="registry-filter">
+    <label for="f-maturity" class="form-label small mb-0">Maturity</label>
+    <select id="f-maturity" class="form-select form-select-sm"><option value="">All maturities</option></select>
+  </div>
+  <div class="registry-filter">
+    <label for="f-ontology" class="form-label small mb-0">Ontology</label>
+    <select id="f-ontology" class="form-select form-select-sm"><option value="">Any ontology</option></select>
+  </div>
+  <div class="registry-filter flex-grow-1">
+    <label for="f-search" class="form-label small mb-0">Search</label>
+    <input id="f-search" type="search" class="form-control form-control-sm" placeholder="Name, description, record type...">
+  </div>
+</div>
+
+<div class="table-responsive">
+<table id="mech-table" class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>Mech</th>
+      <th>One record is</th>
+      <th class="text-end">Records</th>
+      <th>Domains</th>
+      <th>Ontologies</th>
+      <th>Status</th>
+      <th>License</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for m in site.mechs %}
+    {% assign lic = m.license %}
+    <tr data-id="{{ m.id }}"
+        data-domains="{{ m.domains | join: '|' }}"
+        data-collections="{{ m.collection | join: '|' }}"
+        data-status="{{ m.activity_status }}"
+        data-maturity="{{ m.maturity }}"
+        data-ontologies="{{ m.ontologies | join: '|' }}"
+        data-search="{{ m.name }} {{ m.id }} {{ m.record_type }} {{ m.description | strip_html | escape }} {{ m.synonyms | join: ' ' }} {{ m.tags | join: ' ' }}">
+      <td>
+        <a href="{{ '/mech/' | append: m.id | append: '/' | append: m.id | append: '.html' | relative_url }}"><strong>{{ m.name }}</strong></a>
+        <div class="desc small text-muted">{{ m.description | strip_html | truncatewords: 28 }}</div>
+      </td>
+      <td class="small">{{ m.record_type }}</td>
+      <td class="text-end">{% if m.record_count %}{{ m.record_count }}{% else %}<span class="text-muted">?</span>{% endif %}</td>
+      <td>{% for d in m.domains %}<span class="chip">{{ d }}</span>{% endfor %}</td>
+      <td>{% for o in m.ontologies limit: 6 %}<span class="chip">{{ o }}</span>{% endfor %}{% if m.ontologies.size > 6 %}<span class="chip">+{{ m.ontologies.size | minus: 6 }}</span>{% endif %}</td>
+      <td>
+        <span class="badge badge-status-{{ m.activity_status }}">{{ m.activity_status }}</span>
+        {% if m.maturity %}<span class="badge badge-maturity">{{ m.maturity }}</span>{% endif %}
+      </td>
+      <td class="small">{% if lic %}<a href="{{ lic.id }}">{{ lic.label }}</a>{% else %}<span class="text-danger">none</span>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p id="mech-count" class="small text-muted"></p>
+
+<script src="{{ '/assets/js/registry.js' | relative_url }}"></script>

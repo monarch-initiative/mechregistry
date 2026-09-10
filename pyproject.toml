@@ -1,0 +1,44 @@
+[project]
+name = "mechregistry"
+version = "0.1.0"
+description = "A registry of Mechs: AI agent-curated, ontology-grounded knowledge bases."
+readme = "README.md"
+license = { text = "BSD-3-Clause" }
+authors = [
+  { name = "Harry Caufield", email = "jhc@lbl.gov" },
+]
+requires-python = ">=3.10"
+dependencies = [
+  "linkml>=1.8.5",
+  "linkml-runtime>=1.8.0",
+  "pyyaml>=6.0.2",
+  "python-frontmatter>=1.1.0",
+  "ruamel-yaml>=0.18.10",
+]
+
+[project.scripts]
+mechregistry = "mechregistry.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mechregistry"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["_site", ".git", ".venv", "build", "dist", "node_modules"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

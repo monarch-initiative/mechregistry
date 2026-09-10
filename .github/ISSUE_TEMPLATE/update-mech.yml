@@ -1,0 +1,19 @@
+name: Update a Mech entry
+description: Report something wrong or stale in an existing entry.
+title: "Update: [mech id]"
+labels: [update-mech]
+body:
+  - type: input
+    id: mech
+    attributes:
+      label: Mech id
+      placeholder: e.g. dismech
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What should change
+      description: Say which field and what the correct value is, with a source if you have one.
+    validations:
+      required: true

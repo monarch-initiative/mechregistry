@@ -1,0 +1,739 @@
+id: https://w3id.org/monarch-initiative/mechregistry
+name: mechregistry
+title: MechRegistry Schema
+description: >-
+  A schema for describing Mechs: AI agent-curated, ontology-grounded,
+  evidence-backed knowledge bases built on the pattern established by
+  DisMech. Each Mech is one entry. Its products (record corpus, schema,
+  browser, exports) and its curation model are described inline.
+license: BSD-3-Clause
+see_also:
+  - https://monarch-initiative.github.io/mechregistry/
+  - https://dismech.monarchinitiative.org/
+  - https://kghub.org/kg-registry/
+version: 0.1.0
+
+prefixes:
+  mechregistry: https://w3id.org/monarch-initiative/mechregistry/
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  dcterms: http://purl.org/dc/terms/
+  prov: http://www.w3.org/ns/prov#
+  skos: http://www.w3.org/2004/02/skos/core#
+  MESH: http://id.nlm.nih.gov/mesh/
+  NCIT: http://purl.obolibrary.org/obo/NCIT_
+  NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
+
+default_prefix: mechregistry
+default_range: string
+
+imports:
+  - linkml:types
+
+classes:
+
+  Registry:
+    description: >-
+      The registry: a list of Mech entries.
+    tree_root: true
+    attributes:
+      mechs:
+        description: The Mech entries in the registry.
+        range: Mech
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  NamedThing:
+    description: Anything with an identifier.
+    slots:
+      - id
+      - category
+    class_uri: schema:Thing
+
+  Mech:
+    is_a: NamedThing
+    description: >-
+      A Mech: an AI agent-curated knowledge base that keeps one validated,
+      ontology-grounded, evidence-backed record per entity, with an
+      append-only curation history and a LinkML schema. The canonical Mech
+      is DisMech.
+    close_mappings:
+      - schema:Dataset
+    slots:
+      - layout
+      - creation_date
+      - last_modified_date
+    slot_usage:
+      layout:
+        required: true
+    attributes:
+      name:
+        description: The human-readable name of the Mech.
+        required: true
+      description:
+        description: A description of the Mech. One or two paragraphs.
+        required: true
+      activity_status:
+        description: Whether the Mech is maintained.
+        range: ActivityStatusEnum
+        required: true
+      maturity:
+        description: >-
+          How far the corpus has moved from seed to reviewed content.
+        range: MaturityEnum
+      homepage_url:
+        description: >-
+          The primary URL of the Mech. Preferably the page documenting or
+          browsing the resource rather than a download link.
+        range: uriorcurie
+      repository:
+        description: The main version control repository of the Mech.
+        range: uriorcurie
+        required: true
+      collection:
+        description: The collection(s) the Mech belongs to.
+        range: CollectionEnum
+        multivalued: true
+      domains:
+        description: The domain(s) the Mech is relevant to.
+        range: DomainEnum
+        multivalued: true
+        required: true
+      taxon:
+        description: >-
+          The taxon or taxa the Mech is about, as NCBI Taxonomy CURIEs.
+        range: uriorcurie
+        multivalued: true
+      record_type:
+        description: >-
+          What one record represents. A Mech keeps one record per entity,
+          so this names the entity: a disorder, a culture-medium recipe,
+          a habitat, an antimicrobial chemical structure.
+        required: true
+      record_count:
+        description: >-
+          The number of records in the canonical corpus, as of
+          record_count_date. Records and not files: subtypes, modules or
+          normalized intermediate layers are not counted here.
+        range: integer
+      record_count_date:
+        description: The date the record count was taken.
+        range: date
+      record_identifier_policy:
+        description: >-
+          How records are keyed. Usually a public CURIE where one exists
+          and otherwise a minted, content-hashed CURIE in the Mech's own
+          namespace.
+      identifier_prefix:
+        description: >-
+          The prefix the Mech mints for records that have no public
+          identifier, for example habitatmech or antibioticmech.
+      ontologies:
+        description: >-
+          Ontologies and controlled vocabularies used to ground records,
+          as prefixes recognized by the Bioregistry (for example CHEBI,
+          GO, ENVO, NCBITaxon, HP, MONDO).
+        multivalued: true
+      data_sources:
+        description: >-
+          Upstream databases, ontologies or literature corpora the records
+          are seeded or harmonized from.
+        range: DataSourceRef
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      schema_url:
+        description: >-
+          The URL of the Mech's primary LinkML schema file.
+        range: uriorcurie
+      license:
+        description: The license of the curated records.
+        range: License
+        inlined: true
+      code_license:
+        description: >-
+          The license of the Mech's software, if it differs from the
+          license of the records.
+        range: License
+        inlined: true
+      version:
+        description: The version of the Mech, if it versions releases.
+      curation:
+        description: >-
+          How the Mech is curated: which agents, what human review, what
+          evidence is required, what validation runs.
+        range: CurationModel
+        inlined: true
+        required: true
+      features:
+        description: Structural features the Mech's records or site carry.
+        range: FeatureEnum
+        multivalued: true
+      contacts:
+        description: The contact point(s) for the Mech.
+        range: Contact
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      products:
+        description: >-
+          The products of the Mech: its record corpus, schema, browser,
+          exports and documentation.
+        range: Product
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      publications:
+        description: Publications describing the Mech.
+        range: Publication
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      cross_references:
+        description: >-
+          Typed links from this Mech to other Mechs in the registry.
+        range: MechRelation
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      disclaimer:
+        description: >-
+          A reader-facing disclaimer the Mech asks to be shown with its
+          content, for example that it is AI-curated and not medical
+          advice.
+      synonyms:
+        description: Alternate names or abbreviations for the Mech.
+        multivalued: true
+      tags:
+        description: Free-text tags.
+        multivalued: true
+      warnings:
+        description: >-
+          Warnings to show in the interface, such as a broken homepage.
+        multivalued: true
+
+  CurationModel:
+    description: >-
+      The curation model of a Mech. Every field is optional so that a
+      registry entry can be partial, but agent_curated should always be
+      set.
+    attributes:
+      agent_curated:
+        description: >-
+          Whether AI agents generate or maintain most of the content.
+        range: boolean
+        required: true
+      human_review:
+        description: The human review gate on agent output.
+        range: HumanReviewEnum
+      agents:
+        description: >-
+          The agent frameworks or tools used for curation, as free text
+          (for example Claude Code, goose, dragon-ai-agent).
+        multivalued: true
+      evidence_policy:
+        description: >-
+          What evidence a claim must carry, in a sentence. For example:
+          every claim cites a PMID with a verbatim abstract snippet that
+          is checked against the source.
+      validation:
+        description: The automated validation layers that run in CI.
+        range: ValidationEnum
+        multivalued: true
+      curation_history:
+        description: >-
+          Whether every change is recorded as an event in an append-only
+          curation history.
+        range: boolean
+      curation_guide_url:
+        description: >-
+          A URL for the Mech's curation guide or standard operating
+          procedure.
+        range: uriorcurie
+
+  Product:
+    is_a: NamedThing
+    description: >-
+      A product of a Mech: the record corpus, a schema, a browser, an
+      export, an API or a documentation set.
+    slot_usage:
+      category:
+        range: ProductCategoryEnum
+        required: true
+    attributes:
+      name:
+        description: The human-readable name of the product.
+        required: true
+      description:
+        description: A description of the product.
+      product_url:
+        description: >-
+          The URL of the product: a file, a directory in a repository, a
+          base URL of an API, or a page.
+        range: uriorcurie
+      format:
+        description: The format or serialization of the product.
+        range: FormatEnum
+      compression:
+        description: Compression applied to the product, if any.
+        range: CompressionEnum
+      license:
+        description: The license of the product, if it differs from the Mech.
+        range: License
+        inlined: true
+      node_count:
+        description: For a graph product, the number of nodes.
+        range: integer
+      edge_count:
+        description: For a graph product, the number of edges.
+        range: integer
+      compatibility:
+        description: Standards the product conforms to.
+        range: StandardEnum
+        multivalued: true
+
+  DataSourceRef:
+    description: >-
+      An upstream source the Mech draws on, with the provenance relation
+      that describes how.
+    attributes:
+      name:
+        description: The name of the source, for example MIBiG or ChEBI.
+        required: true
+      url:
+        description: A URL for the source.
+        range: uriorcurie
+      relation_type:
+        description: The PROV-O relation from the Mech's records to the source.
+        range: ProvenanceRelationEnum
+      description:
+        description: What the Mech takes from the source, in a sentence.
+
+  MechRelation:
+    description: A typed link from one Mech to another.
+    attributes:
+      target:
+        description: The registry id of the other Mech.
+        required: true
+      relation:
+        description: The kind of relation.
+        range: MechRelationEnum
+        required: true
+      description:
+        description: A sentence saying what the relation consists of.
+
+  Contact:
+    description: "A contact point for a Mech: a person or an organization."
+    attributes:
+      category:
+        description: Whether the contact is an Individual or an Organization.
+        range: ContactCategoryEnum
+        required: true
+      label:
+        description: The name of the person or organization.
+        required: true
+      orcid:
+        description: For an individual, the ORCID without the URL prefix.
+        pattern: "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$"
+      contact_details:
+        description: Ways to reach the contact.
+        range: ContactDetails
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  ContactDetails:
+    description: One way to reach a contact.
+    attributes:
+      contact_type:
+        description: The kind of contact detail.
+        range: ContactTypeEnum
+        required: true
+      value:
+        description: >-
+          The value, without any prefix: an email address, a GitHub
+          username, or a URL.
+        required: true
+
+  License:
+    description: >-
+      A license. The id is a URL to the license text and label is its
+      short name, for example CC0 1.0 or CC BY 4.0.
+    attributes:
+      id:
+        description: A URL to the license text.
+        range: uriorcurie
+        required: true
+      label:
+        description: The short name of the license.
+        required: true
+      spdx_id:
+        description: The SPDX identifier, for example CC0-1.0.
+
+  Publication:
+    description: A publication describing a Mech.
+    attributes:
+      id:
+        description: >-
+          A CURIE or URL. A DOI with prefix (doi:10.1093/...), a PMID
+          (PMID:12345), or a URL.
+        required: true
+      title:
+        description: The title.
+      authors:
+        description: The authors.
+        multivalued: true
+      journal:
+        description: The journal or venue.
+      year:
+        description: The year of publication.
+      doi:
+        description: The DOI, without any prefix.
+      preferred:
+        description: Whether this is the preferred citation for the Mech.
+        range: boolean
+
+slots:
+  id:
+    description: >-
+      The identifier of an entity in the registry. For a Mech this is a
+      lowercase slug such as dismech. For a product it is the Mech id
+      followed by a dot and a short name, such as dismech.records.
+    identifier: true
+    required: true
+    slot_uri: dcterms:identifier
+  category:
+    description: >-
+      The category of the entity. For a Mech this is always Mech.
+    range: string
+  layout:
+    description: >-
+      The Jekyll layout used to render the entry. For a Mech this is
+      mech_detail.
+  creation_date:
+    description: The date the registry entry was created, ISO 8601.
+    range: date
+  last_modified_date:
+    description: The date the registry entry was last modified, ISO 8601.
+    range: date
+
+enums:
+
+  ActivityStatusEnum:
+    description: Whether a Mech is maintained. Follows OBO Foundry usage.
+    permissible_values:
+      active:
+        description: The Mech is maintained and available.
+      inactive:
+        description: The Mech is not being updated. Its availability may vary.
+      orphaned:
+        description: The Mech has no maintainer.
+      unresponsive:
+        description: The Mech is no longer reachable. Only its metadata remains.
+      unknown:
+        description: The status is unknown.
+
+  MaturityEnum:
+    description: >-
+      How far a Mech's corpus has moved from an automated seed toward
+      reviewed content. These are coarse and describe the corpus as a
+      whole.
+    permissible_values:
+      seeded:
+        description: >-
+          Records were generated from upstream sources and no curator,
+          human or agent, has yet revised them.
+      curating:
+        description: >-
+          Agents and people are revising records. Some records are
+          reviewed and many are not.
+      reviewed:
+        description: >-
+          Most records have passed a review gate and carry evidence.
+      released:
+        description: >-
+          The Mech publishes versioned releases of a reviewed corpus.
+
+  HumanReviewEnum:
+    description: The human gate on agent-generated content.
+    permissible_values:
+      pull_request:
+        description: >-
+          Agent changes arrive as pull requests that a person reviews and
+          merges.
+      spot_check:
+        description: A person reviews a sample of records after merge.
+      none:
+        description: No human review.
+      unknown:
+        description: The review policy is not documented.
+
+  ValidationEnum:
+    description: Automated validation layers a Mech runs.
+    permissible_values:
+      schema:
+        description: Records validate against a closed LinkML schema.
+      ontology_terms:
+        description: >-
+          Ontology identifiers exist and their stored labels match the
+          source ontology.
+      references:
+        description: >-
+          Cited references exist and quoted snippets appear in the cited
+          text.
+      cross_field:
+        description: >-
+          Cross-field checks the schema cannot express, run by custom
+          validators.
+      corpus_reproduction:
+        description: >-
+          The corpus can be rebuilt from committed inventories and the
+          rebuild matches what is tracked.
+      compliance:
+        description: >-
+          Coverage of recommended fields is measured and thresholds are
+          enforced.
+
+  FeatureEnum:
+    description: Structural features a Mech's records or site may carry.
+    permissible_values:
+      causal_mechanism_graphs:
+        description: >-
+          Records carry directed, evidence-backed graphs of mechanism.
+      evidence_snippets:
+        description: >-
+          Evidence items quote the cited source verbatim.
+      ontology_grounding:
+        description: Entities bind to public ontology terms with labels.
+      append_only_history:
+        description: >-
+          Every change is an event in an append-only history directory.
+      knowledge_gaps:
+        description: >-
+          Records carry structured open questions, controversies and
+          curation to-dos.
+      static_browser:
+        description: A static site lets a reader browse every record.
+      embeddings_explorer:
+        description: >-
+          The site offers an embedding map or nearest-neighbour view of
+          records.
+      computational_models:
+        description: >-
+          The Mech carries quantitative or executable models alongside
+          records.
+      kgx_export:
+        description: Records export to KGX nodes and edges.
+      sssom_export:
+        description: Mappings export as SSSOM.
+      mechanism_modules:
+        description: >-
+          Recurring mechanisms are factored into reusable modules that
+          records declare conformance to.
+
+  ProductCategoryEnum:
+    description: The kind of product.
+    permissible_values:
+      RecordCorpus:
+        description: >-
+          The canonical record files, usually one YAML file per entity.
+      DataModelProduct:
+        description: A LinkML schema or other formal data model.
+      GraphProduct:
+        description: A graph export, such as KGX nodes and edges.
+      MappingProduct:
+        description: A mapping set, such as an SSSOM file.
+      GraphicalInterface:
+        description: A browser or other graphical interface.
+      ProgrammingInterface:
+        description: An API.
+      DocumentationProduct:
+        description: A documentation site or document set.
+      ModelProduct:
+        description: Computational models, such as SBML or Antimony files.
+      OtherProduct:
+        description: Another kind of product.
+
+  FormatEnum:
+    description: The format or serialization of a product.
+    permissible_values:
+      yaml:
+        description: YAML.
+      json:
+        description: JSON.
+      jsonl:
+        description: JSON Lines.
+      tsv:
+        description: Tab-separated values.
+      csv:
+        description: Comma-separated values.
+      kgx:
+        description: KGX node and edge files.
+      sssom:
+        description: SSSOM mapping TSV.
+      linkml:
+        description: A LinkML schema in YAML.
+      owl:
+        description: OWL.
+      sbml:
+        description: SBML.
+      html:
+        description: HTML.
+      markdown:
+        description: Markdown.
+      other:
+        description: Another format.
+
+  CompressionEnum:
+    description: Compression applied to a product.
+    permissible_values:
+      gzip:
+        description: gzip.
+      targz:
+        description: A gzip-compressed tar archive.
+      zip:
+        description: zip.
+      other:
+        description: Another compression format.
+
+  StandardEnum:
+    description: Standards a product may conform to.
+    permissible_values:
+      biolink:
+        description: The Biolink Model.
+      kgx:
+        description: The KGX exchange format.
+      sssom:
+        description: SSSOM.
+      linkml:
+        description: LinkML.
+      mech_shared:
+        description: >-
+          The shared Mech LinkML module vendored by the X-Mech fleet,
+          which supplies Discussion and Dataset classes.
+
+  ProvenanceRelationEnum:
+    description: PROV-O relations from a Mech's records to a source.
+    permissible_values:
+      prov:hadPrimarySource:
+        description: The source is a primary source for the records.
+        meaning: prov:hadPrimarySource
+      prov:wasDerivedFrom:
+        description: The records were derived or transformed from the source.
+        meaning: prov:wasDerivedFrom
+      prov:used:
+        description: >-
+          Curation used the source as an input, reference, ontology or
+          vocabulary.
+        meaning: prov:used
+      prov:wasInformedBy:
+        description: The source informed the records without direct derivation.
+        meaning: prov:wasInformedBy
+
+  MechRelationEnum:
+    description: Ways one Mech relates to another.
+    permissible_values:
+      follows_pattern_of:
+        description: >-
+          This Mech adopts the curation pattern of the target: one record
+          per entity, ontology-grounded, evidence-backed, schema-validated,
+          incrementally curated.
+      consumes:
+        description: This Mech reads records or identifiers from the target.
+      provides_to:
+        description: This Mech supplies records or identifiers to the target.
+      hands_off_to:
+        description: >-
+          This Mech excludes a class of entity from its scope and points
+          to the target for it.
+      shares_vocabulary_with:
+        description: >-
+          This Mech grounds records in the same ontologies as the target
+          so that records can be joined.
+      adopts_practice_of:
+        description: This Mech adopted a curation practice from the target.
+      sibling_of:
+        description: The two Mechs are part of the same fleet or family.
+
+  CollectionEnum:
+    description: Named collections of Mechs.
+    permissible_values:
+      monarch:
+        description: Mechs developed by the Monarch Initiative.
+      x-mech-suite:
+        description: >-
+          The X-Mech suite: the fleet of microbial Mechs developed by
+          CultureBotAI at Lawrence Berkeley National Laboratory and
+          coordinated by culturebotai-claw.
+      kg-microbe:
+        description: Mechs that publish into or draw from KG-Microbe.
+
+  DomainEnum:
+    description: >-
+      A domain a Mech is relevant to. Values and MeSH or NCIT meanings
+      follow KG-Registry so that entries can be compared across the two
+      registries.
+    permissible_values:
+      biomedical:
+        description: The biomedical sciences broadly.
+        meaning: MESH:D035843
+      clinical:
+        description: The clinical sciences, including diagnosis and treatment.
+        meaning: MESH:D015510
+      microbiology:
+        description: The microbiological sciences, including microbiomes.
+        meaning: MESH:D008829
+      chemistry and biochemistry:
+        description: Chemical compounds, their structure and reactions.
+        meaning: MESH:D002621
+      environment:
+        description: Environments and ecosystems.
+        meaning: MESH:D004777
+      organisms:
+        description: Specific organisms or taxa.
+        meaning: NCIT:C14250
+      phenotype:
+        description: The phenotypes and traits of organisms.
+        meaning: MESH:D010641
+      biological systems:
+        description: Cellular and molecular biology broadly.
+        meaning: MESH:D001690
+      pathways:
+        description: Metabolic, signaling and regulatory networks.
+        meaning: MESH:D053858
+      pharmacology:
+        description: How drugs act on biological systems.
+        meaning: MESH:D010600
+      genomics:
+        description: Genomes, genes and their function.
+        meaning: MESH:D023281
+      immunology:
+        description: The immune system and its disorders.
+        meaning: MESH:D000486
+      nutrition:
+        description: Nutrition, diet and growth media.
+        meaning: MESH:D052756
+      anatomy and development:
+        description: Structure, morphology and development.
+        meaning: MESH:D000715
+      other:
+        description: Another domain.
+
+  ContactCategoryEnum:
+    description: Kinds of contact.
+    permissible_values:
+      Individual:
+        description: A person.
+      Organization:
+        description: An organization.
+
+  ContactTypeEnum:
+    description: Kinds of contact detail.
+    permissible_values:
+      email:
+        description: An email address.
+      github:
+        description: A GitHub username or organization.
+      url:
+        description: A URL.

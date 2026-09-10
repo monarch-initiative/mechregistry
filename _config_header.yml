@@ -1,0 +1,33 @@
+name: MechRegistry
+title: MechRegistry
+description: A registry of Mechs, AI agent-curated knowledge bases.
+markdown: kramdown
+highlighter: rouge
+url: https://monarch-initiative.github.io
+baseurl: /mechregistry
+repo: https://github.com/monarch-initiative/mechregistry
+repo_src: https://github.com/monarch-initiative/mechregistry/blob/main/
+author:
+  name: Monarch Initiative
+plugins:
+  - jekyll-sitemap
+  - jekyll-relative-links
+exclude:
+  - README.md
+  - LICENSE
+  - LICENSE-data.md
+  - Makefile
+  - pyproject.toml
+  - uv.lock
+  - src
+  - tests
+  - .venv
+  - .ruff_cache
+  - .pytest_cache
+  - node_modules
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - _config_header.yml
+## --Anything above this line is edited in _config_header.yml --
+## --Everything below this line is generated from registry/mechs.yml --

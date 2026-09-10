@@ -216,3 +216,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# MechRegistry generated artifacts (run `make all`)
+_config.yml
+_data/schema.yaml
+_site/
+.jekyll-cache/
+.jekyll-metadata
+registry/mechs.yml
+registry/mechs.json
+registry/mechs-summary.json
+docs/schema/
+src/mechregistry/schema/mechregistry_all.yaml
+src/mechregistry/schema/mechregistry.schema.json
+Gemfile.lock
