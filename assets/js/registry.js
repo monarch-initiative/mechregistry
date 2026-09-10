@@ -2,6 +2,10 @@
    The table is rendered by Liquid from site.mechs; this only hides rows. */
 (function () {
   'use strict';
+  document.querySelectorAll('.num-fmt').forEach(function (el) {
+    var n = Number(el.textContent.replace(/,/g, ''));
+    if (!isNaN(n)) el.textContent = n.toLocaleString('en-US');
+  });
   var rows = Array.prototype.slice.call(document.querySelectorAll('#mech-table tbody tr'));
   if (!rows.length) return;
 

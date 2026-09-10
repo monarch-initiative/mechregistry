@@ -4,9 +4,12 @@ title: MechRegistry
 ---
 <div class="row">
   <div class="col">
-    <h1 class="display-6">MechRegistry
-      <br/><small class="text-muted">A registry of Mechs: AI agent-curated knowledge bases.</small>
-    </h1>
+    <div class="mr-hero">
+      <img src="{{ '/images/mech-logo.svg' | relative_url }}" alt="MechRegistry logo">
+      <h1 class="display-6 mb-0">MechRegistry
+        <br/><small class="text-muted">A registry of Mechs: AI agent-curated knowledge bases.</small>
+      </h1>
+    </div>
     <p class="mt-2" style="max-width: 48rem">
       A Mech keeps one validated, ontology-grounded, evidence-backed record per entity, with a LinkML
       schema and an append-only curation history. AI agents write most of it and people review it.
@@ -26,7 +29,7 @@ title: MechRegistry
   {% endfor %}
   <div class="stat"><div class="num">{{ site.mechs | size }}</div><div class="lbl">Mechs</div></div>
   <div class="stat"><div class="num">{{ active_count }}</div><div class="lbl">Active</div></div>
-  <div class="stat"><div class="num">{{ total_records }}</div><div class="lbl">Records, summed</div></div>
+  <div class="stat"><div class="num num-fmt">{{ total_records }}</div><div class="lbl">Records, summed</div></div>
 </div>
 
 <div class="small mb-2">
@@ -92,7 +95,7 @@ title: MechRegistry
         <div class="desc small text-muted">{{ m.description | strip_html | truncatewords: 28 }}</div>
       </td>
       <td class="small">{{ m.record_type }}</td>
-      <td class="text-end">{% if m.record_count %}{{ m.record_count }}{% else %}<span class="text-muted">?</span>{% endif %}</td>
+      <td class="text-end">{% if m.record_count %}<span class="num-fmt">{{ m.record_count }}</span>{% else %}<span class="text-muted">?</span>{% endif %}</td>
       <td>{% for d in m.domains %}{% include domain_chip.html domain=d %}{% endfor %}</td>
       <td>{% for o in m.ontologies limit: 6 %}{% include ontology_chip.html prefix=o %}{% endfor %}{% if m.ontologies.size > 6 %}<a class="chip" href="{{ '/mech/' | append: m.id | append: '/' | append: m.id | append: '.html' | relative_url }}#grounding" title="All {{ m.ontologies.size }} ontologies on the Mech page">+{{ m.ontologies.size | minus: 6 }}</a>{% endif %}</td>
       <td>

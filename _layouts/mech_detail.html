@@ -9,7 +9,7 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
 {%- unless m -%}{%- assign m = page -%}{%- endunless -%}
 <div class="row">
   <div class="col">
-    <h1><i class="bi bi-diagram-3"></i> {{ m.name }}
+    <h1><img src="{{ '/images/mech-logo.svg' | relative_url }}" alt="" width="40" height="40" class="me-2 align-text-bottom">{{ m.name }}
       <small class="text-muted fs-5">{{ m.id }}</small></h1>
     <p>
       <span class="badge badge-status-{{ m.activity_status }}">{{ m.activity_status }}</span>
@@ -40,7 +40,7 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
   <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
     <h5 class="card-title">One record is</h5>
     <p class="card-text">{{ m.record_type }}</p>
-    {% if m.record_count %}<p class="card-text"><strong>{{ m.record_count }}</strong> records{% if m.record_count_date %} <span class="text-muted small">as of {{ m.record_count_date }}</span>{% endif %}</p>{% endif %}
+    {% if m.record_count %}<p class="card-text"><strong class="num-fmt">{{ m.record_count }}</strong> records{% if m.record_count_date %} <span class="text-muted small">as of {{ m.record_count_date }}</span>{% endif %}</p>{% endif %}
   </div></div></div>
   <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
     <h5 class="card-title">Links</h5>
@@ -186,6 +186,12 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
 </div>
 {% endif %}
 
+<script>
+  document.querySelectorAll('.num-fmt').forEach(function (el) {
+    var n = Number(el.textContent.replace(/,/g, ''));
+    if (!isNaN(n)) el.textContent = n.toLocaleString('en-US');
+  });
+</script>
 <div class="mech-section">
 <h2>Registry entry</h2>
 <p class="small text-muted">

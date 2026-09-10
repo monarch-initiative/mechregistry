@@ -1,30 +1,69 @@
-html, body { height: 100%; }
-body { display: flex; flex-flow: column; min-width: 0; }
-main.site-container { flex: 1 0 auto; padding-top: 1.25rem; padding-bottom: 2rem; }
-.footer { background: #f8f9fa; }
-a { text-decoration: none; }
-a:hover { text-decoration: underline; }
+/* MechRegistry palette */
+:root {
+  --mr-ink: #182825;      /* dark green-black: navbar, headings, chip text */
+  --mr-blue: #016FB9;     /* links, primary badges, stat numbers */
+  --mr-cyan: #22AED1;     /* hover, accents */
+  --mr-slate: #6D8EA0;    /* muted text, secondary badges, borders */
+  --mr-sand: #AFA98D;     /* maturity badges, disclaimer rule */
+  --mr-sand-tint: #f4f2eb;
+  --mr-slate-tint: #e8eef2;
+  --mr-cyan-tint: #d9f1f7;
+}
 
+html, body { height: 100%; }
+body { display: flex; flex-flow: column; min-width: 0; color: var(--mr-ink); background: #fff; }
+main.site-container { flex: 1 0 auto; padding-top: 1.25rem; padding-bottom: 2rem; }
+h1, h2, h3, h4, h5 { color: var(--mr-ink); }
+
+a { color: var(--mr-blue); text-decoration: none; }
+a:hover { color: var(--mr-cyan); text-decoration: underline; }
+
+/* Navbar and footer */
+.navbar.mr-navbar { background: var(--mr-ink); }
+.mr-navbar .navbar-brand, .mr-navbar .nav-link { color: #fff; }
+.mr-navbar .nav-link:hover, .mr-navbar .navbar-brand:hover { color: var(--mr-cyan); text-decoration: none; }
+.mr-navbar .navbar-toggler { border-color: var(--mr-slate); }
+.mr-navbar .navbar-toggler-icon { filter: invert(1); }
+.footer { background: var(--mr-sand-tint); border-top: 1px solid var(--mr-sand); }
+
+/* Home page */
+.mr-hero { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.mr-hero img { width: 96px; height: 96px; }
+.stat-row .stat { min-width: 8rem; }
+.stat-row .stat .num { font-size: 1.6rem; font-weight: 600; line-height: 1.1; color: var(--mr-blue); }
+.stat-row .stat .lbl { font-size: .8rem; color: var(--mr-slate); text-transform: uppercase; }
 .registry-filter-bar { display: flex; flex-wrap: wrap; gap: .75rem; }
 .registry-filter { min-width: 11rem; }
+.form-select:focus, .form-control:focus { border-color: var(--mr-cyan); box-shadow: 0 0 0 .2rem var(--mr-cyan-tint); }
 #mech-table td, #mech-table th { vertical-align: top; }
+#mech-table thead th { color: var(--mr-slate); font-weight: 600; border-bottom: 2px solid var(--mr-slate); }
 #mech-table .desc { max-width: 34rem; }
-.badge-status-active { background: #2e7d32; }
-.badge-status-inactive, .badge-status-orphaned, .badge-status-unresponsive, .badge-status-unknown { background: #8d6e63; }
-.badge-maturity { background: #5c6bc0; }
-.chip { display: inline-block; font-size: .78rem; padding: .05rem .45rem; margin: .1rem .15rem .1rem 0; border-radius: .6rem; background: #eef1f5; color: #333; }
-.chip-link:hover { background: #dbe4f0; text-decoration: none; }
-.chip-link { border-bottom: 1px dotted #8a97a8; }
+.table-hover > tbody > tr:hover > * { background: var(--mr-sand-tint); }
 
-.header-card-row .card-title { font-size: .95rem; color: #6c757d; text-transform: uppercase; letter-spacing: .03em; }
-.mech-section h2 { font-size: 1.35rem; margin-top: 2rem; border-bottom: 1px solid #dee2e6; padding-bottom: .25rem; }
-.mech-disclaimer { border-left: 4px solid #e0a800; }
+/* Badges and chips */
+.badge-status-active { background: var(--mr-blue); }
+.badge-status-inactive, .badge-status-orphaned, .badge-status-unresponsive, .badge-status-unknown { background: var(--mr-slate); }
+.badge-maturity { background: var(--mr-sand); color: var(--mr-ink); }
+.badge.bg-secondary { background: var(--mr-slate) !important; }
+.badge.bg-info { background: var(--mr-cyan) !important; color: var(--mr-ink); }
+.chip { display: inline-block; font-size: .78rem; padding: .05rem .45rem; margin: .1rem .15rem .1rem 0; border-radius: .6rem; background: var(--mr-slate-tint); color: var(--mr-ink); }
+.chip-link { border-bottom: 1px dotted var(--mr-slate); }
+.chip-link:hover { background: var(--mr-cyan-tint); color: var(--mr-ink); text-decoration: none; }
+
+/* Detail page */
+.header-card-row .card { background: var(--mr-sand-tint); border-color: var(--mr-sand); }
+.header-card-row .card-title { font-size: .95rem; color: var(--mr-slate); text-transform: uppercase; letter-spacing: .03em; }
+.mech-section h2 { font-size: 1.35rem; margin-top: 2rem; border-bottom: 1px solid var(--mr-slate); padding-bottom: .25rem; }
+.mech-section th { color: var(--mr-slate); font-weight: 600; }
+.mech-disclaimer { border-left: 4px solid var(--mr-sand); background: var(--mr-sand-tint); }
+.alert-warning { background: var(--mr-sand-tint); border-color: var(--mr-sand); color: var(--mr-ink); }
+
+/* Docs */
 .doc-sidebar { position: sticky; top: 1rem; }
-.doc-sidebar .nav-section-title { font-weight: 600; font-size: .85rem; text-transform: uppercase; color: #6c757d; margin-bottom: .5rem; }
-.doc-sidebar .nav-link { padding: .25rem .5rem; color: #495057; border-left: 2px solid transparent; }
-.doc-sidebar .nav-link.active { color: #0d6efd; border-left-color: #0d6efd; }
+.doc-sidebar .nav-section-title { font-weight: 600; font-size: .85rem; text-transform: uppercase; color: var(--mr-slate); margin-bottom: .5rem; }
+.doc-sidebar .nav-link { padding: .25rem .5rem; color: var(--mr-ink); border-left: 2px solid transparent; }
+.doc-sidebar .nav-link:hover { color: var(--mr-cyan); border-left-color: var(--mr-cyan); text-decoration: none; }
+.doc-sidebar .nav-link.active { color: var(--mr-blue); border-left-color: var(--mr-blue); }
 .doc-content { max-width: 52rem; }
 .schema-doc table { font-size: .9rem; }
-.stat-row .stat { min-width: 8rem; }
-.stat-row .stat .num { font-size: 1.6rem; font-weight: 600; line-height: 1.1; }
-.stat-row .stat .lbl { font-size: .8rem; color: #6c757d; text-transform: uppercase; }
+code { color: var(--mr-blue); }
