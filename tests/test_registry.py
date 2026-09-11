@@ -82,3 +82,37 @@ def test_cli_validate_exit_code():
         check=False,
     )
     assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+def test_fix_schema_doc_text_makes_kramdown_render():
+    src = (
+        "---\nsearch:\n  exclude: true\n---\n"
+        "# Enum: X\n\n"
+        "URI: [mechregistry:X](https://w3id.org/x/X)\n\n"
+        "## Permissible Values\n"
+        "| Value | Meaning |\n| --- | --- |\n| a | None |\n"
+        "## Slots\n\n| Name |\n| --- |\n| [relation](relation.md) |\n\n"
+        "* from schema: https://w3id.org/x\n\n"
+        "### Cardinality and Requirements\n\n| Property | Value |\n| --- | --- |\n\n"
+        "### Slot Characteristics\n\n| Property | Value |\n| --- | --- |\n| Owner | X |\n\n"
+        "<!-- TODO: see https://example.org/keep -->\n\n"
+        "<details>\n```yaml\nfrom_schema: https://w3id.org/x\n```\n</details>\n"
+    )
+    fixed = cli.fix_schema_doc_text(src, "X")
+    assert fixed.startswith("---\nlayout: schema_doc\ntitle: X\n---\n\n# Enum: X")
+    assert "search:" not in fixed
+    # A blank line separates the heading from the table.
+    assert "## Permissible Values\n\n| Value |" in fixed
+    assert "| a | None |\n\n## Slots" in fixed
+    # An existing blank line is not doubled.
+    assert "## Slots\n\n\n" not in fixed
+    assert "](relation.html)" in fixed
+    # Bare URLs become autolinks; linked, commented, and fenced ones are untouched.
+    assert "* from schema: <https://w3id.org/x>" in fixed
+    assert "[mechregistry:X](https://w3id.org/x/X)" in fixed
+    assert "<!-- TODO: see https://example.org/keep -->" in fixed
+    assert "from_schema: https://w3id.org/x\n" in fixed
+    # An empty table and its heading are dropped; a populated one stays.
+    assert "Cardinality and Requirements" not in fixed
+    assert "### Slot Characteristics\n\n| Property | Value |\n| --- | --- |\n| Owner | X |" in fixed
+    assert '<details markdown="1">\n<summary>Show source</summary>\n\n```yaml' in fixed
