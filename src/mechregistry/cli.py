@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import sys
 from functools import lru_cache
 from io import StringIO
@@ -286,25 +287,98 @@ def check_prefixes(args) -> int:
 # ----------------------------------------------------------------------------
 
 
+TABLE_SEPARATOR = re.compile(r"^\|(\s*:?-+:?\s*\|)+\s*$")
+
+
+def drop_empty_tables(lines: list[str]) -> list[str]:
+    """Remove tables that have a header and separator but no rows.
+
+    gen-doc writes one under "Cardinality and Requirements" for a slot with
+    no constraints. kramdown renders such a table as paragraph text. The
+    heading directly above the table goes with it.
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        nxt = lines[i + 1] if i + 1 < len(lines) else ""
+        after = lines[i + 2] if i + 2 < len(lines) else ""
+        if line.startswith("|") and TABLE_SEPARATOR.match(nxt) and not after.startswith("|"):
+            while out and not out[-1].strip():
+                out.pop()
+            if out and out[-1].startswith("#"):
+                out.pop()
+            i += 2
+            continue
+        out.append(line)
+        i += 1
+    return out
+
+
+BARE_URL = re.compile(r"(?<![\[(<\w/])(https?://[^\s<>()\[\]]+)")
+
+
+def fix_schema_doc_text(text: str, title: str) -> str:
+    """Rewrite one gen-doc Markdown page so kramdown renders it.
+
+    gen-doc writes MkDocs-flavoured Markdown. kramdown, which GitHub Pages
+    uses, differs in ways that break the page:
+
+    * a table must have a blank line before and after it, and gen-doc puts
+      the permissible values table straight under its heading and some
+      headings straight under a table, and a table with no rows is not a
+      table at all;
+    * bare URLs are not autolinked, so wrap them in ``<...>``;
+    * ``<details>`` content is raw HTML unless marked ``markdown="1"``, so the
+      fenced YAML source came out as literal backticks.
+
+    Also replace the ``search:`` front matter with a Jekyll one and point
+    ``.md`` links at ``.html``.
+    """
+    if text.startswith("---\n"):
+        end = text.find("\n---\n", 4)
+        if end != -1:
+            text = text[end + 5 :]
+    text = text.replace(".md)", ".html)")
+
+    out: list[str] = []
+    in_fence = False
+    for line in drop_empty_tables(text.split("\n")):
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        if in_fence:
+            out.append(line)
+            continue
+        if stripped == "<details>":
+            out.append('<details markdown="1">')
+            out.append("<summary>Show source</summary>")
+            out.append("")
+            continue
+        # A table needs a blank line on both sides or kramdown reads it as
+        # paragraph text.
+        if out and out[-1].strip() and stripped and line.startswith("|") != out[-1].startswith("|"):
+            out.append("")
+        if not stripped.startswith("<!--"):
+            line = BARE_URL.sub(r"<\1>", line)
+        out.append(line)
+    text = "\n".join(out)
+    return f"---\nlayout: schema_doc\ntitle: {title}\n---\n\n" + text.lstrip("\n")
+
+
 def fix_schema_docs(args) -> int:
     """Make gen-doc output renderable by Jekyll.
 
-    gen-doc writes MkDocs-flavoured Markdown: a ``search:`` front matter block and
-    links to ``.md`` files. Replace the front matter with a Jekyll one and point
-    links at ``.html``. Also rename the ``license`` slot page so that it does not
-    collide with the ``License`` class page on case-insensitive filesystems.
+    See :func:`fix_schema_doc_text` for the per-page rewrites. Also rename the
+    ``license`` slot page so that it does not collide with the ``License``
+    class page on case-insensitive filesystems.
     """
     doc_dir = Path(args.dir)
     for path in sorted(doc_dir.glob("*.md")):
         text = path.read_text(encoding="utf-8")
-        if text.startswith("---\n"):
-            end = text.find("\n---\n", 4)
-            if end != -1:
-                text = text[end + 5 :]
-        text = text.replace(".md)", ".html)")
-        title = path.stem
-        text = f"---\nlayout: schema_doc\ntitle: {title}\n---\n\n" + text.lstrip("\n")
-        path.write_text(text, encoding="utf-8")
+        path.write_text(fix_schema_doc_text(text, path.stem), encoding="utf-8")
     lower = doc_dir / "license.md"
     upper = doc_dir / "License.md"
     # On a case-sensitive filesystem both exist as distinct files; on a
