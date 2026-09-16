@@ -7,7 +7,7 @@
 A Mech keeps one validated record per entity, with a LinkML schema, ontology-grounded
 identifiers, cited evidence and an append-only curation history. AI agents write most of it
 and people review it. The canonical Mech is [DisMech](https://dismech.monarchinitiative.org/).
-The nine microbial Mechs of the [X-Mech suite](https://culturebotai.github.io/mechs/) follow
+The ten microbial Mechs of the [X-Mech suite](https://culturebotai.github.io/mechs/) follow
 its pattern.
 
 MechRegistry is modeled on [KG-Registry](https://kghub.org/kg-registry/): every entry is a
