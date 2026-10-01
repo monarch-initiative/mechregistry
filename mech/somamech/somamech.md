@@ -17,7 +17,7 @@ description: >-
   time by GitHub issue, and arrive by pull request. SOMAMech follows the DisMech curation
   pattern.
 activity_status: active
-maturity: seeded
+maturity: curating
 homepage_url: https://github.com/EHS-Data-Standards/somamech
 repository: https://github.com/EHS-Data-Standards/somamech
 schema_url: https://github.com/EHS-Data-Standards/somamech/blob/main/src/soma/schema/soma.yaml
@@ -135,13 +135,14 @@ cross_references:
   - target: dismech
     relation: follows_pattern_of
 creation_date: 2026-09-22
-last_modified_date: 2026-09-22
+last_modified_date: 2026-10-01
 ---
 
 SOMAMech is new. The repository was created on 2026-09-17. At commit 2e32037
-on 2026-09-22, `kb/publications/` held no records. 137 paper stubs sat in the queue and 26 extraction pull requests
-were open. The maturity is `seeded` because nothing has been merged
-yet. It will move to `curating` once extractions land.
+on 2026-09-22, `kb/publications/` held no records. 137 paper stubs sat in the
+queue and 26 extraction pull requests were open. By commit 56e57cf on
+2026-09-29, 8 extractions had been merged, and the maturity moved from
+`seeded` to `curating` on 2026-10-01.
 
 The Mech has no browser site yet. The homepage is the repository. The SOMA
 documentation at https://ehs-data-standards.github.io/soma/ describes the
