@@ -32,7 +32,11 @@ taxon:
   - NCBITaxon:2157
 record_type: a microbial taxon at species rank or below
 record_count: 625960
-record_count_date: 2026-09-16
+record_count_date: 2026-10-01
+record_count_commit: 6af6aee89c9c791c4d94ec893f151b35b6f43ac2
+record_count_source:
+  path: data/taxa
+  pattern: "*.yaml"
 record_identifier_policy: >-
   Records are keyed by their NCBITaxon CURIE. Filenames are pinned by data/taxa/PATHS.tsv so
   a re-seed never renames an existing record.
@@ -173,8 +177,8 @@ creation_date: 2026-09-16
 last_modified_date: 2026-09-16
 ---
 
-The record count is the generated corpus figure in the README at commit
-7d1756a on 2026-09-16. Of 625,960 records, 605,695 are Bacteria, 14,013
+On 2026-09-16 the record count was the generated corpus figure in the README
+at commit 7d1756a. It is now counted from the repository tree. Of 625,960 records then, 605,695 are Bacteria, 14,013
 Archaea and 6,243 Eukaryota. 572,305 are species and 46,325 are strains.
 No record is REVIEWED and 14 are DEPRECATED. The rest are SEEDED or
 PROPOSED. Records are generated and `just verify-corpus` requires that they

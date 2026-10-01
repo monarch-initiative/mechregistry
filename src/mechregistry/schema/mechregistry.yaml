@@ -120,6 +120,26 @@ classes:
       record_count_date:
         description: The date the record count was taken.
         range: date
+      record_count_source:
+        description: >-
+          Where the record count comes from, so that it can be refreshed
+          automatically. When this is set, a scheduled job counts the
+          matching files in the repository and rewrites record_count,
+          record_count_date and record_count_commit.
+        range: RecordCountSource
+        inlined: true
+      record_count_commit:
+        description: >-
+          The commit of the repository at which the record count was
+          taken, when it was taken from record_count_source.
+      record_count_error:
+        description: >-
+          Why the most recent automatic refresh of the record count
+          failed. The count and its date are left as they were. Absent
+          when the most recent refresh succeeded.
+      record_count_error_date:
+        description: The date of the failed refresh named in record_count_error.
+        range: date
       record_identifier_policy:
         description: >-
           How records are keyed. Usually a public CURIE where one exists
@@ -292,6 +312,25 @@ classes:
         description: Standards the product conforms to.
         range: StandardEnum
         multivalued: true
+
+  RecordCountSource:
+    description: >-
+      How to count a Mech's records from its repository: every file under
+      path whose name matches pattern, at the head of branch. The
+      repository is the Mech's repository.
+    attributes:
+      path:
+        description: >-
+          The directory in the repository that holds the records, for
+          example kb/disorders. Files in subdirectories are counted.
+        required: true
+      pattern:
+        description: >-
+          A shell-style pattern the file name must match. Defaults to
+          *.yaml.
+        ifabsent: string(*.yaml)
+      branch:
+        description: The branch to count on. Defaults to the repository's default branch.
 
   DataSourceRef:
     description: >-

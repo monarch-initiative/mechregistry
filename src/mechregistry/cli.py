@@ -10,9 +10,13 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import fnmatch
 import json
+import os
 import re
+import subprocess
 import sys
+import tempfile
 from functools import lru_cache
 from io import StringIO
 from pathlib import Path
@@ -194,6 +198,8 @@ def summarize(mech: dict) -> dict:
         "record_type": mech.get("record_type"),
         "record_count": mech.get("record_count"),
         "record_count_date": mech.get("record_count_date"),
+        "record_count_error": mech.get("record_count_error"),
+        "record_count_error_date": mech.get("record_count_error_date"),
         "homepage_url": mech.get("homepage_url"),
         "repository": mech.get("repository"),
         "license": lic.get("label"),
@@ -280,6 +286,167 @@ def check_prefixes(args) -> int:
             print(f"FAIL {prefix}: {exc}")
     print(f"{len(prefixes)} prefixes checked, {failed} unresolved")
     return 1 if failed else 0
+
+
+# ----------------------------------------------------------------------------
+# Record count refresh
+# ----------------------------------------------------------------------------
+
+# A refreshed count below this fraction of the old one is treated as an
+# error and not written. A Mech that moved its records looks like a Mech
+# that lost them, and a person should look before the registry says so.
+MIN_COUNT_RATIO = 0.5
+
+COUNT_KEYS = ("record_count", "record_count_date", "record_count_commit")
+ERROR_KEYS = ("record_count_error", "record_count_error_date")
+
+
+class CountError(Exception):
+    """A record count could not be taken."""
+
+
+def _git(*args: str, cwd: Path | None = None, timeout: int = 900) -> str:
+    proc = subprocess.run(
+        ["git", *args], cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False
+    )
+    if proc.returncode != 0:
+        lines = proc.stderr.strip().splitlines()
+        msg = next((ln for ln in lines if ln.startswith("fatal:")), None) or (
+            lines[-1] if lines else f"exit {proc.returncode}"
+        )
+        raise CountError(f"Git {args[0]} failed: {msg}")
+    return proc.stdout
+
+
+def count_records(repository: str, source: dict) -> tuple[int, str]:
+    """Count the files ``source`` names in ``repository``.
+
+    Clones with no blobs and depth 1, so only commit and tree objects are
+    fetched. TaxonMech's 625,960 records come down as about 20 MB.
+    Returns the count and the commit it was taken at.
+    """
+    path = source["path"].strip("/")
+    pattern = source.get("pattern") or "*.yaml"
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / "repo"
+        clone = ["clone", "--quiet", "--filter=blob:none", "--no-checkout", "--depth", "1"]
+        if source.get("branch"):
+            clone += ["--branch", source["branch"]]
+        try:
+            _git(*clone, repository.rstrip("/"), str(dest))
+            sha = _git("rev-parse", "HEAD", cwd=dest).strip()
+            kind = subprocess.run(
+                ["git", "cat-file", "-t", f"HEAD:{path}"],
+                cwd=dest, capture_output=True, text=True, check=False,
+            ).stdout.strip()
+            if kind != "tree":
+                raise CountError(f"Directory {path} not found at commit {sha[:7]}")
+            # -z keeps non-ASCII file names unquoted, so the pattern sees them.
+            out = _git("ls-tree", "-r", "-z", "--name-only", "HEAD", "--", path, cwd=dest)
+        except subprocess.TimeoutExpired as exc:
+            raise CountError(f"Git timed out after {exc.timeout} s") from exc
+    names = [n for n in out.split("\0") if n]
+    count = sum(1 for n in names if fnmatch.fnmatchcase(n.rsplit("/", 1)[-1], pattern))
+    return count, sha
+
+
+def set_front_matter_keys(text: str, values: dict, after: str) -> str:
+    """Set or remove top-level scalar keys in a Markdown file's front matter.
+
+    Edits lines in place so the rest of the file keeps its formatting. A
+    round trip through a YAML library would reflow it. A key set to None
+    is removed. A key not yet present goes after the key set before it, or
+    after ``after``, which must be a scalar key. Failing that it goes last.
+    """
+    if not text.startswith("---\n"):
+        raise ValueError("no front matter")
+    end = text.index("\n---", 4)
+    lines = text[4:end].split("\n")
+    rest = text[end:]
+
+    def find(key: str) -> int | None:
+        return next((i for i, ln in enumerate(lines) if ln.startswith(key + ":")), None)
+
+    anchor = after
+    for key, value in values.items():
+        i = find(key)
+        if value is None:
+            if i is not None:
+                del lines[i]
+            continue
+        line = f"{key}: {value}"
+        if i is not None:
+            lines[i] = line
+        else:
+            j = find(anchor)
+            lines.insert(len(lines) if j is None else j + 1, line)
+        anchor = key
+    return "---\n" + "\n".join(lines) + rest
+
+
+def refresh_entry(path: Path, today: dt.date, counter=count_records) -> tuple[str, str]:
+    """Refresh one entry's record count in place.
+
+    Returns a status (``ok``, ``error`` or ``skip``) and a message. On
+    error the old count stays and the error and its date are written next
+    to it, for the site to show.
+    """
+    data = load_entry(path)
+    source = data.get("record_count_source")
+    if not source:
+        return "skip", "no record_count_source"
+    old = data.get("record_count")
+    try:
+        count, sha = counter(data["repository"], source)
+        if old and count < old * MIN_COUNT_RATIO:
+            raise CountError(
+                f"Count fell from {old} to {count} at commit {sha[:7]} and was not applied"
+            )
+    except CountError as exc:
+        status, message = "error", str(exc)
+        # One line, double-quoted. JSON string syntax is valid YAML.
+        values = {
+            "record_count_error": json.dumps(message[:300]),
+            "record_count_error_date": today.isoformat(),
+        }
+    else:
+        status, message = "ok", f"{old} -> {count} at {sha[:7]}"
+        values = {
+            "record_count": str(count),
+            "record_count_date": today.isoformat(),
+            "record_count_commit": sha,
+            "record_count_error": None,
+            "record_count_error_date": None,
+        }
+    # The anchor must be a scalar key. Inserting after a block key would
+    # split it from its children.
+    after = "record_count_commit" if "record_count_commit" in data else "record_count_date"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(set_front_matter_keys(text, values, after=after), encoding="utf-8")
+    return status, message
+
+
+def refresh_counts(args) -> int:
+    """Refresh record counts from each Mech's repository.
+
+    A failure for one Mech is recorded in its entry and does not stop the
+    others. The exit code is 0 unless an entry could not be written.
+    """
+    today = dt.date.fromisoformat(args.date) if args.date else dt.datetime.now(dt.timezone.utc).date()
+    rows = []
+    for path in mech_files(args.files):
+        status, message = refresh_entry(path, today)
+        rows.append((path.stem, status, message))
+        print(f"{status:5} {path.stem}: {message}")
+    errors = sum(1 for r in rows if r[1] == "error")
+    print(f"{len(rows)} entries, {errors} could not be refreshed")
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a", encoding="utf-8") as fh:
+            fh.write(f"### Record counts, {today.isoformat()}\n\n| Mech | Status | Detail |\n|---|---|---|\n")
+            for mid, status, message in rows:
+                fh.write(f"| {mid} | {status} | {message.replace('|', '/')} |\n")
+    return 0
 
 
 # ----------------------------------------------------------------------------
@@ -430,6 +597,11 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("check-prefixes", help="check ontology prefixes against the Bioregistry")
     p.add_argument("files", nargs="*")
     p.set_defaults(func=check_prefixes)
+
+    p = sub.add_parser("refresh-counts", help="refresh record counts from Mech repositories")
+    p.add_argument("files", nargs="*")
+    p.add_argument("--date", help="date to record, ISO 8601 (default: today, UTC)")
+    p.set_defaults(func=refresh_counts)
 
     p = sub.add_parser("fix-schema-docs", help="make gen-doc output renderable by Jekyll")
     p.add_argument("dir", nargs="?", default=str(ROOT / "docs" / "schema"))

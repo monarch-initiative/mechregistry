@@ -1,0 +1,73 @@
+name: Refresh record counts
+
+# Once a week, count each Mech's records in its repository, write the
+# counts into the entries, and push to main if every check passes. A Mech
+# whose count cannot be taken keeps its old count and gets an error note
+# with the date, which the site shows. A check that fails stops the push.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"   # Mondays, 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write   # push the refreshed entries
+  actions: write    # start the Pages deploy
+
+concurrency:
+  group: refresh-counts
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: uv sync --dev
+
+      - name: Refresh counts
+        run: uv run mechregistry refresh-counts
+
+      - name: Lint
+        run: make lint
+      - name: Validate entries and build registry artifacts
+        run: make all
+      - name: Tests
+        run: make test
+      - name: Build the Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Commit and push
+        id: push
+        run: |
+          if git diff --quiet -- mech; then
+            echo "No entry changed."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mech
+          git commit -m "Refresh record counts ($(date -u +%F))"
+          # Someone may have pushed while this ran. Only mech/ changed here.
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with GITHUB_TOKEN does not start other workflows, so
+      # start the deploy by hand.
+      - name: Deploy the site
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main

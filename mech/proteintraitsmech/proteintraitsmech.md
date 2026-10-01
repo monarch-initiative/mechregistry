@@ -27,8 +27,12 @@ domains:
   - chemistry and biochemistry
   - genomics
 record_type: a protein sequence, structure, function or evolution trait class
-record_count: 429271
-record_count_date: 2026-09-10
+record_count: 429293
+record_count_date: 2026-10-01
+record_count_commit: 46ebe736f0f1b5fc38f8f73ebe6bfec375f35454
+record_count_source:
+  path: data/traits
+  pattern: "*.yaml"
 record_identifier_policy: >-
   Preferably an existing InterPro, Pfam, PROSITE, CATH, SCOP, MEROPS or PR CURIE.
 ontologies:
@@ -134,5 +138,7 @@ cross_references:
 creation_date: 2026-09-10
 last_modified_date: 2026-09-10
 ---
-The record count is the figure published on the X-Mech suite page on 2026-09-10.
-The repository is too large to count from the GitHub tree API.
+Until 2026-10-01 the record count was the figure published on the X-Mech suite
+page. It is now counted from the repository tree, as for the other Mechs. At
+commit 86368bb on 2026-09-10 the tree held 429,271 trait files, which matches
+the suite page.

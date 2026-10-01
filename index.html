@@ -23,7 +23,10 @@ title: MechRegistry
 <div class="d-flex flex-wrap gap-4 stat-row mb-3">
   {% assign total_records = 0 %}
   {% assign active_count = 0 %}
+  {% assign count_errors = 0 %}
+  {% assign count_dates = site.mechs | map: "record_count_date" | compact | sort %}
   {% for m in site.mechs %}
+    {% if m.record_count_error %}{% assign count_errors = count_errors | plus: 1 %}{% endif %}
     {% if m.record_count %}{% assign total_records = total_records | plus: m.record_count %}{% endif %}
     {% if m.activity_status == "active" %}{% assign active_count = active_count | plus: 1 %}{% endif %}
   {% endfor %}
@@ -31,6 +34,11 @@ title: MechRegistry
   <div class="stat"><div class="num">{{ active_count }}</div><div class="lbl">Active</div></div>
   <div class="stat"><div class="num num-fmt">{{ total_records }}</div><div class="lbl">Records, summed</div></div>
 </div>
+<p class="small text-muted mb-2">
+  Record counts were last refreshed on {{ count_dates | last }}{% if count_dates.first != count_dates.last %}. The oldest is from {{ count_dates | first }}{% endif %}.
+  Counts are refreshed weekly from each Mech's repository.
+  {% if count_errors > 0 %}<span class="text-warning-emphasis"><i class="bi bi-exclamation-triangle"></i> {% if count_errors == 1 %}One count{% else %}{{ count_errors }} counts{% endif %} could not be refreshed on the last run and {% if count_errors == 1 %}is{% else %}are{% endif %} marked below.</span>{% endif %}
+</p>
 
 <div class="small mb-2">
   Download registry [
@@ -95,7 +103,7 @@ title: MechRegistry
         <div class="desc small text-muted">{{ m.description | strip_html | truncatewords: 28 }}</div>
       </td>
       <td class="small">{{ m.record_type }}</td>
-      <td class="text-end">{% if m.record_count %}<span class="num-fmt">{{ m.record_count }}</span>{% else %}<span class="text-muted">?</span>{% endif %}</td>
+      <td class="text-end">{% if m.record_count != nil %}<span class="num-fmt">{{ m.record_count }}</span>{% if m.record_count_error %} <i class="bi bi-exclamation-triangle text-warning-emphasis" title="Could not be refreshed on {{ m.record_count_error_date }}: {{ m.record_count_error | escape }}"></i>{% endif %}<div class="small text-muted text-nowrap">{{ m.record_count_date }}</div>{% else %}<span class="text-muted">?</span>{% endif %}</td>
       <td>{% for d in m.domains %}{% include domain_chip.html domain=d %}{% endfor %}</td>
       <td>{% for o in m.ontologies limit: 6 %}{% include ontology_chip.html prefix=o %}{% endfor %}{% if m.ontologies.size > 6 %}<a class="chip" href="{{ '/mech/' | append: m.id | append: '/' | append: m.id | append: '.html' | relative_url }}#grounding" title="All {{ m.ontologies.size }} ontologies on the Mech page">+{{ m.ontologies.size | minus: 6 }}</a>{% endif %}</td>
       <td>

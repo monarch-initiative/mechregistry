@@ -22,7 +22,11 @@ domains:
   - pathways
 record_type: a natural product chemical structure
 record_count: 3115
-record_count_date: 2026-09-10
+record_count_date: 2026-10-01
+record_count_commit: 3ddaddee1bd5f64521ef441b181b22e75a487758
+record_count_source:
+  path: data/natural_products
+  pattern: "*.yaml"
 record_identifier_policy: >-
   A ChEBI CURIE where the entry has a structure, otherwise a minted, content-hashed CURIE.
   A record with no InChIKey is never written.

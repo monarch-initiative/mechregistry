@@ -27,6 +27,13 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
   This Mech is {{ m.activity_status }}. {% assign sd = site.data.schema.enums.ActivityStatusEnum.permissible_values[m.activity_status] %}{{ sd.description }}
 </div>
 {% endif %}
+{% if m.record_count_error %}
+<div class="alert alert-warning" role="alert" style="max-width: 52rem">
+  <strong>The record count could not be refreshed on {{ m.record_count_error_date }}.</strong>
+  {{ m.record_count_error | escape }}.
+  {% if m.record_count_date %}The count shown was taken on {{ m.record_count_date }}.{% endif %}
+</div>
+{% endif %}
 {% for w in m.warnings %}
 <div class="alert alert-danger" role="alert" style="max-width: 52rem">{{ w }}</div>
 {% endfor %}
@@ -40,7 +47,8 @@ Jekyll reserves page.name for the file name, so read the entry from site.mechs
   <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
     <h5 class="card-title">One record is</h5>
     <p class="card-text">{{ m.record_type }}</p>
-    {% if m.record_count %}<p class="card-text"><strong class="num-fmt">{{ m.record_count }}</strong> records{% if m.record_count_date %} <span class="text-muted small">as of {{ m.record_count_date }}</span>{% endif %}</p>{% endif %}
+    {% if m.record_count != nil %}<p class="card-text"><strong class="num-fmt">{{ m.record_count }}</strong> records{% if m.record_count_date %} <span class="text-muted small">as of {{ m.record_count_date }}</span>{% endif %}</p>
+    <p class="card-text small text-muted">{% if m.record_count_source %}Counted from <code>{{ m.record_count_source.path }}/{{ m.record_count_source.pattern | default: "*.yaml" }}</code>{% if m.record_count_commit %} at <a href="{{ m.repository }}/tree/{{ m.record_count_commit }}/{{ m.record_count_source.path }}"><code>{{ m.record_count_commit | slice: 0, 7 }}</code></a>{% endif %}. Refreshed weekly.{% else %}Counted by hand. Not refreshed automatically.{% endif %}</p>{% endif %}
   </div></div></div>
   <div class="col d-flex"><div class="card bg-light w-100"><div class="card-body">
     <h5 class="card-title">Links</h5>

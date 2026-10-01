@@ -25,8 +25,12 @@ taxon:
   - NCBITaxon:2
   - NCBITaxon:2157
 record_type: a microbial habitat or environment
-record_count: 3205
-record_count_date: 2026-09-10
+record_count: 3206
+record_count_date: 2026-10-01
+record_count_commit: 9843fafd177e7cb9828f5dba82028461da67fbc2
+record_count_source:
+  path: data/habitats
+  pattern: "*.yaml"
 record_identifier_policy: >-
   An ontology CURIE where one is defensible, otherwise a minted, content-hashed CURIE that
   can be re-grounded later.

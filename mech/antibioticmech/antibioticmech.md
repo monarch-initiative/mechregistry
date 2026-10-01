@@ -23,8 +23,12 @@ domains:
   - pharmacology
   - microbiology
 record_type: an antimicrobial chemical structure
-record_count: 2934
-record_count_date: 2026-09-10
+record_count: 2939
+record_count_date: 2026-10-01
+record_count_commit: d3b9ab73b578213ec08d0596eb2aaeffa412c6b7
+record_count_source:
+  path: data/antibiotics
+  pattern: "*.yaml"
 record_identifier_policy: >-
   A ChEBI CURIE where the entry has a structure, otherwise a minted, content-hashed CURIE.
   A record with no InChIKey is never written.
