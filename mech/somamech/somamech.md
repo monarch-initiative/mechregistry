@@ -30,8 +30,12 @@ taxon:
   - NCBITaxon:9606
   - NCBITaxon:10090
 record_type: a publication, extracted into its assays, measurements and Key Events
-record_count: 0
-record_count_date: 2026-09-22
+record_count: 8
+record_count_date: 2026-10-01
+record_count_commit: 56e57cf07ed3f05fa6eef1ae2bc9f3619076572d
+record_count_source:
+  path: kb/publications
+  pattern: "*.yaml"
 record_identifier_policy: >-
   Records are named Container-<author><year>.yaml and name their source paper by PMID in
   source_publication. KeyEvent identifiers are shared across papers. Every other entity
@@ -135,8 +139,7 @@ last_modified_date: 2026-09-22
 ---
 
 SOMAMech is new. The repository was created on 2026-09-17. At commit 2e32037
-on 2026-09-22, `kb/publications/` held no records. The record count is 0 for
-that reason. 137 paper stubs sat in the queue and 26 extraction pull requests
+on 2026-09-22, `kb/publications/` held no records. 137 paper stubs sat in the queue and 26 extraction pull requests
 were open. The maturity is `seeded` because nothing has been merged
 yet. It will move to `curating` once extractions land.
 

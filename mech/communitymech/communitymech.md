@@ -27,8 +27,12 @@ taxon:
   - NCBITaxon:2
   - NCBITaxon:2157
 record_type: a microbial community
-record_count: 328
-record_count_date: 2026-09-10
+record_count: 456
+record_count_date: 2026-10-01
+record_count_commit: a46744e99f41e6fde9f7c318e03436f6a1e5bfb4
+record_count_source:
+  path: kb/communities
+  pattern: "*.yaml"
 ontologies:
   - NCBITaxon
   - CHEBI

@@ -51,6 +51,30 @@ case-insensitive.
 repository and not intermediate layers. Set `record_count_date` to the date you
 counted. Say in the body of the entry, below the front matter, how you counted.
 
+If the records are one file each in one directory of the repository, add a
+`record_count_source` and the count will refresh itself:
+
+```yaml
+record_count_source:
+  path: kb/disorders      # files in subdirectories count too
+  pattern: "*.yaml"       # the default
+```
+
+The [Refresh record counts](https://github.com/monarch-initiative/mechregistry/actions/workflows/refresh-counts.yml)
+workflow runs every Monday. It counts the matching files at the head of the
+repository, writes `record_count`, `record_count_date` and
+`record_count_commit`, runs the same checks as QC, pushes to `main` and deploys
+the site. If one Mech cannot be counted, its old count stays, and
+`record_count_error` and `record_count_error_date` say why and when. The site
+shows that note on the Mech's page. A count that falls below half of the old
+one is treated as an error and is not written, since that is more often a moved
+directory than lost records. To try it locally:
+
+```bash
+uv run mechregistry refresh-counts                       # every entry
+uv run mechregistry refresh-counts mech/dismech/dismech.md
+```
+
 ## Local site build
 
 The site is Jekyll. With Docker:

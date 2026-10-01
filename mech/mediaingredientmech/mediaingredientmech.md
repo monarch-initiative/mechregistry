@@ -25,8 +25,12 @@ domains:
   - nutrition
   - microbiology
 record_type: a culture-media ingredient
-record_count: 2954
-record_count_date: 2026-09-10
+record_count: 2953
+record_count_date: 2026-10-01
+record_count_commit: 212814c808f438bee2cc57535407db1f38944622
+record_count_source:
+  path: data/ingredients
+  pattern: "*.yaml"
 ontologies:
   - CHEBI
   - CAS
@@ -129,4 +133,4 @@ warnings:
   - The repository carries no LICENSE file as of 2026-09-10. The CC0 license recorded here is the one the X-Mech suite page states for the fleet.
 ---
 The record count is the sum of the mapped and unmapped ingredient YAML files
-in the repository on 2026-09-10.
+under `data/ingredients/`.

@@ -32,8 +32,12 @@ domains:
 taxon:
   - NCBITaxon:9606
 record_type: a human disorder or disorder subtype
-record_count: 2864
-record_count_date: 2026-09-10
+record_count: 3268
+record_count_date: 2026-10-01
+record_count_commit: 5ece56453d85ddb3c99778917fb7011ab2a43c14
+record_count_source:
+  path: kb/disorders
+  pattern: "*.yaml"
 record_identifier_policy: >-
   Records are named by disorder and bound to Mondo disease identifiers where a term exists.
 ontologies:
