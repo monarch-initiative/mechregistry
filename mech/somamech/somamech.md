@@ -30,9 +30,9 @@ taxon:
   - NCBITaxon:9606
   - NCBITaxon:10090
 record_type: a publication, extracted into its assays, measurements and Key Events
-record_count: 8
-record_count_date: 2026-10-01
-record_count_commit: 56e57cf07ed3f05fa6eef1ae2bc9f3619076572d
+record_count: 40
+record_count_date: 2026-10-05
+record_count_commit: d8f40d9f2ecadba8a17ba85a9365e8b8e5d2af85
 record_count_source:
   path: kb/publications
   pattern: "*.yaml"
