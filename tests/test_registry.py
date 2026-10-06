@@ -34,13 +34,15 @@ def test_cross_references_resolve():
 def test_dismech_is_the_canonical_mech():
     entries = {cli.load_entry(p)["id"]: cli.load_entry(p) for p in ENTRIES}
     assert "dismech" in entries
+    # Mech-like entries share practices with DisMech but not its pattern.
+    mechs = [mid for mid, m in entries.items() if "Mech-like" not in m.get("tags", [])]
     followers = [
         mid
         for mid, m in entries.items()
         for r in m.get("cross_references", [])
         if r["target"] == "dismech" and r["relation"] == "follows_pattern_of"
     ]
-    assert len(followers) == len(entries) - 1
+    assert len(followers) == len(mechs) - 1
 
 
 def test_validator_rejects_unknown_field(tmp_path: Path):
