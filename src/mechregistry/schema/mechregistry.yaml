@@ -329,6 +329,11 @@ classes:
           A shell-style pattern the file name must match. Defaults to
           *.yaml.
         ifabsent: string(*.yaml)
+      exclude:
+        description: >-
+          Shell-style patterns for file names that match pattern but are
+          not records, for example product pages kept next to each record.
+        multivalued: true
       branch:
         description: The branch to count on. Defaults to the repository's default branch.
 

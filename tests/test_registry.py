@@ -186,7 +186,7 @@ def _git(*args, cwd):
 def test_count_records_from_a_git_repository(tmp_path: Path):
     repo = tmp_path / "upstream"
     (repo / "kb" / "things" / "sub").mkdir(parents=True)
-    for name in ["a.yaml", "b.yaml", "sub/c.yaml", "sub/1β-méthyl.yaml", "notes.md", ".gitkeep"]:
+    for name in ["a.yaml", "b.yaml", "sub/c.yaml", "sub/1β-méthyl.yaml", "sub/c.v2.yaml", "notes.md", ".gitkeep"]:
         (repo / "kb" / "things" / name).write_text("x: 1\n")
     (repo / "other.yaml").write_text("x: 1\n")
     _git("init", "-q", "-b", "main", cwd=repo)
@@ -195,9 +195,11 @@ def test_count_records_from_a_git_repository(tmp_path: Path):
     url = repo.as_uri()
 
     count, sha = cli.count_records(url, {"path": "kb/things", "pattern": "*.yaml"})
-    assert count == 4
+    assert count == 5
     assert len(sha) == 40
     assert cli.count_records(url, {"path": "kb/things/", "pattern": "*.md"})[0] == 1
+    excluded = {"path": "kb/things", "pattern": "*.yaml", "exclude": ["*.*.yaml", "a*"]}
+    assert cli.count_records(url, excluded)[0] == 3
     with pytest.raises(cli.CountError, match="not found"):
         cli.count_records(url, {"path": "kb/missing"})
     with pytest.raises(cli.CountError, match="Git clone failed"):
