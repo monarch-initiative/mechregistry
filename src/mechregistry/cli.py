@@ -345,8 +345,14 @@ def count_records(repository: str, source: dict) -> tuple[int, str]:
             out = _git("ls-tree", "-r", "-z", "--name-only", "HEAD", "--", path, cwd=dest)
         except subprocess.TimeoutExpired as exc:
             raise CountError(f"Git timed out after {exc.timeout} s") from exc
-    names = [n for n in out.split("\0") if n]
-    count = sum(1 for n in names if fnmatch.fnmatchcase(n.rsplit("/", 1)[-1], pattern))
+    excludes = source.get("exclude") or []
+    names = [n.rsplit("/", 1)[-1] for n in out.split("\0") if n]
+    count = sum(
+        1
+        for n in names
+        if fnmatch.fnmatchcase(n, pattern)
+        and not any(fnmatch.fnmatchcase(n, x) for x in excludes)
+    )
     return count, sha
 
 
