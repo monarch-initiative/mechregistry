@@ -28,8 +28,8 @@ record_type: >-
   a knowledge resource (knowledge graph, data source, ontology, data model or aggregator) and
   its products
 record_count: 1137
-record_count_date: 2026-10-10
-record_count_commit: b7fd67feaa3b5014f902a2cd064749530cbaeb1c
+record_count_date: 2026-10-12
+record_count_commit: 7b84d297bb72bdf605193f1544943ed50bdabcf7
 record_count_source:
   path: resource
   pattern: "*.md"

@@ -31,7 +31,7 @@ taxon:
   - NCBITaxon:10090
 record_type: a publication, extracted into its assays, measurements and Key Events
 record_count: 40
-record_count_date: 2026-10-05
+record_count_date: 2026-10-12
 record_count_commit: d8f40d9f2ecadba8a17ba85a9365e8b8e5d2af85
 record_count_source:
   path: kb/publications
