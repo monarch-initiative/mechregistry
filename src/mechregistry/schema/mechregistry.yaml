@@ -626,6 +626,16 @@ enums:
         description: HTML.
       markdown:
         description: Markdown.
+      jsonld:
+        description: JSON-LD, RDF as JSON.
+      turtle:
+        description: Turtle (.ttl), RDF as text.
+      sqlite:
+        description: A SQLite database file.
+      duckdb:
+        description: A DuckDB database file.
+      sql:
+        description: SQL, as DDL, INSERT statements or both.
       other:
         description: Another format.
 
