@@ -7,7 +7,7 @@
 A Mech keeps one validated record per entity, with a LinkML schema, ontology-grounded
 identifiers, cited evidence and an append-only curation history. AI agents write most of it
 and people review it. The canonical Mech is [DisMech](https://dismech.monarchinitiative.org/).
-The ten microbial Mechs of the [X-Mech suite](https://culturebotai.github.io/mechs/) follow
+The fourteen Mechs of the [X-Mech suite](https://culturebotai.github.io/mechs/) follow
 its pattern, and so does [SOMAMech](https://github.com/EHS-Data-Standards/somamech), which
 extracts environmental health papers. The registry also lists Mech-like resources such as
 [ai-gene-review](https://github.com/ai4curation/ai-gene-review), which reviews existing GO
