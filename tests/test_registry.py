@@ -45,6 +45,22 @@ def test_dismech_is_the_canonical_mech():
     assert len(followers) == len(mechs) - 1
 
 
+def test_specific_domains_list_their_broader_domain():
+    import yaml
+
+    schema = yaml.safe_load(cli.SCHEMA_PATH.read_text(encoding="utf-8"))
+    values = schema["enums"]["DomainEnum"]["permissible_values"]
+    broader = {d: v["is_a"] for d, v in values.items() if v and "is_a" in v}
+    assert broader, "DomainEnum has no is_a hierarchy"
+    missing = [
+        (p.stem, d, broader[d])
+        for p in ENTRIES
+        for d in cli.load_entry(p)["domains"]
+        if d in broader and broader[d] not in cli.load_entry(p)["domains"]
+    ]
+    assert missing == []
+
+
 def test_validator_rejects_unknown_field(tmp_path: Path):
     src = (ROOT / "mech" / "dismech" / "dismech.md").read_text()
     bad_dir = tmp_path / "bad"
