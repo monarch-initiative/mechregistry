@@ -19,7 +19,8 @@ schema_url: https://github.com/CultureBotAI/AIMech/blob/main/src/aimech/schema/a
 collection:
   - x-mech-suite
 domains:
-  - other
+  - machine learning
+  - information technology
 record_type: an artificial intelligence concept
 record_count: 1088
 record_count_date: 2026-10-13

@@ -707,7 +707,7 @@ enums:
         description: Mechs developed by the Monarch Initiative.
       x-mech-suite:
         description: >-
-          The X-Mech suite: the fleet of microbial Mechs developed by
+          The X-Mech suite: the fleet of Mechs, most of them microbial, developed by
           CultureBotAI at Lawrence Berkeley National Laboratory and
           coordinated by culturebotai-claw.
       kg-microbe:
@@ -715,9 +715,11 @@ enums:
 
   DomainEnum:
     description: >-
-      A domain a Mech is relevant to. Values and MeSH or NCIT meanings
-      follow KG-Registry so that entries can be compared across the two
-      registries.
+      A domain a Mech is relevant to. Mechs are not limited to biology
+      or biomedicine. Values and MeSH or NCIT meanings follow KG-Registry
+      so that entries can be compared across the two registries. As there,
+      a specific domain names its broader domain with is_a, and an entry
+      that lists a specific domain also lists the broader one.
     permissible_values:
       biomedical:
         description: The biomedical sciences broadly.
@@ -761,6 +763,19 @@ enums:
       anatomy and development:
         description: Structure, morphology and development.
         meaning: MESH:D000715
+      information technology:
+        description: >-
+          The information technology and informatics sciences, including
+          software and computational methods.
+        meaning: MESH:D000073256
+      machine learning:
+        description: Machine learning and artificial intelligence.
+        meaning: MESH:D000069550
+        is_a: information technology
+      general:
+        description: >-
+          Not specific to any one domain, such as upper-level or
+          cross-domain resources.
       other:
         description: Another domain.
 
