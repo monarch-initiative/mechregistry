@@ -58,9 +58,9 @@ license:
   label: CC BY 4.0
   spdx_id: CC-BY-4.0
 code_license:
-  id: https://creativecommons.org/publicdomain/zero/1.0/
-  label: CC0 1.0
-  spdx_id: CC0-1.0
+  id: https://opensource.org/license/bsd-3-clause
+  label: BSD-3-Clause
+  spdx_id: BSD-3-Clause
 curation:
   agent_curated: true
   human_review: pull_request
@@ -128,5 +128,5 @@ cross_references:
     relation: provides_to
     description: Wrote the licensed source-queue pattern that CellStructureMech adapted.
 creation_date: 2026-09-10
-last_modified_date: 2026-09-10
+last_modified_date: 2026-10-14
 ---
