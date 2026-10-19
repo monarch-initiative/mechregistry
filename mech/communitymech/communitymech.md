@@ -49,9 +49,9 @@ data_sources:
     relation_type: prov:used
     description: Taxonomy for community members.
 license:
-  id: https://creativecommons.org/publicdomain/zero/1.0/
-  label: CC0 1.0
-  spdx_id: CC0-1.0
+  id: https://creativecommons.org/licenses/by/4.0/
+  label: CC BY 4.0
+  spdx_id: CC-BY-4.0
 code_license:
   id: https://opensource.org/license/bsd-3-clause
   label: BSD-3-Clause
@@ -131,5 +131,5 @@ cross_references:
     relation: consumes
     description: The RelatedIngredient.mediaingredientmech_id slot is declared for MediaIngredientMech ingredient ids. No record populates it yet.
 creation_date: 2026-09-10
-last_modified_date: 2026-09-10
+last_modified_date: 2026-10-14
 ---

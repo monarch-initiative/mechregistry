@@ -52,9 +52,13 @@ data_sources:
     relation_type: prov:used
     description: Mapping target for complex and food-derived ingredients.
 license:
-  id: https://creativecommons.org/publicdomain/zero/1.0/
-  label: CC0 1.0
-  spdx_id: CC0-1.0
+  id: https://creativecommons.org/licenses/by/4.0/
+  label: CC BY 4.0
+  spdx_id: CC-BY-4.0
+code_license:
+  id: https://opensource.org/license/bsd-3-clause
+  label: BSD-3-Clause
+  spdx_id: BSD-3-Clause
 curation:
   agent_curated: true
   human_review: pull_request
@@ -128,9 +132,7 @@ cross_references:
     relation: provides_to
     description: Curated ChEBI and FOODON mappings sync back to recipes. CultureMech vendors the ingredient-role enums and consumes the immutable label index.
 creation_date: 2026-09-10
-last_modified_date: 2026-09-10
-warnings:
-  - The repository carries no LICENSE file as of 2026-09-10. The CC0 license recorded here is the one the X-Mech suite page states for the fleet.
+last_modified_date: 2026-10-14
 ---
 The record count is the sum of the mapped and unmapped ingredient YAML files
 under `data/ingredients/`.

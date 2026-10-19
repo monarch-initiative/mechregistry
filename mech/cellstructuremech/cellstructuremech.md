@@ -52,9 +52,13 @@ data_sources:
     relation_type: prov:hadPrimarySource
     description: Evidence on functions and on causal graph edges.
 license:
-  id: https://creativecommons.org/publicdomain/zero/1.0/
-  label: CC0 1.0
-  spdx_id: CC0-1.0
+  id: https://creativecommons.org/licenses/by/4.0/
+  label: CC BY 4.0
+  spdx_id: CC-BY-4.0
+code_license:
+  id: https://opensource.org/license/bsd-3-clause
+  label: BSD-3-Clause
+  spdx_id: BSD-3-Clause
 curation:
   agent_curated: true
   human_review: pull_request
@@ -125,6 +129,6 @@ cross_references:
     relation: adopts_practice_of
     description: Adapted AntibioticMech's licensed source-queue pattern.
 creation_date: 2026-09-10
-last_modified_date: 2026-09-10
+last_modified_date: 2026-10-14
 ---
 All 92 records carry the PROPOSED status as of the README on 2026-09-10.
