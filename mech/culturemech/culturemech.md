@@ -31,8 +31,8 @@ taxon:
   - NCBITaxon:4751
 record_type: a culture-medium recipe
 record_count: 6320
-record_count_date: 2026-10-12
-record_count_commit: 9976e05b88c89c6c6b5a4c1fd60ed0d6a86033a6
+record_count_date: 2026-10-19
+record_count_commit: 7c568537897ee4bba1b8e97f8172133c1572aec0
 record_count_source:
   path: data/merge_yaml/merged
   pattern: "*.yaml"

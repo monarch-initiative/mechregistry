@@ -28,8 +28,8 @@ taxon:
   - NCBITaxon:2157
 record_type: a microbial community
 record_count: 458
-record_count_date: 2026-10-12
-record_count_commit: 80049bcc9195480a58633236169b62f86c23489a
+record_count_date: 2026-10-19
+record_count_commit: a4611c913c8da9619673df63a0c2cce3aa206a83
 record_count_source:
   path: kb/communities
   pattern: "*.yaml"

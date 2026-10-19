@@ -25,9 +25,9 @@ taxon:
   - NCBITaxon:2
   - NCBITaxon:2157
 record_type: a microbial ecophysiological trait
-record_count: 1105
-record_count_date: 2026-10-12
-record_count_commit: a57b006b32f2313579650d105d7da245a99a5b95
+record_count: 1130
+record_count_date: 2026-10-19
+record_count_commit: f25e2af0b38a8303b13f627a9a5c33b36af4b3d2
 record_count_source:
   path: data/traits
   pattern: "*.yaml"
