@@ -23,9 +23,9 @@ domains:
   - pharmacology
   - microbiology
 record_type: an antimicrobial chemical structure
-record_count: 2939
-record_count_date: 2026-10-19
-record_count_commit: baf3b3203d748d098686e166cdb2a6138f47eb59
+record_count: 3012
+record_count_date: 2026-10-26
+record_count_commit: dba9a8a6efb9d6f5ea4b7c0df1e959f36b7f365c
 record_count_source:
   path: data/antibiotics
   pattern: "*.yaml"

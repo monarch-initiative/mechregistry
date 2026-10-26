@@ -27,9 +27,9 @@ domains:
 record_type: >-
   a knowledge resource (knowledge graph, data source, ontology, data model or aggregator) and
   its products
-record_count: 1137
-record_count_date: 2026-10-19
-record_count_commit: 7b84d297bb72bdf605193f1544943ed50bdabcf7
+record_count: 1179
+record_count_date: 2026-10-26
+record_count_commit: e1159806632b5483de137b2e407037d7b5352b59
 record_count_source:
   path: resource
   pattern: "*.md"

@@ -27,9 +27,9 @@ domains:
   - chemistry and biochemistry
   - genomics
 record_type: a protein sequence, structure, function or evolution trait class
-record_count: 429293
-record_count_date: 2026-10-19
-record_count_commit: 1c23e2d86d53039f0ebe301e06d5ea80ebb09541
+record_count: 429394
+record_count_date: 2026-10-26
+record_count_commit: c4147394c698324ae537c0c63c2c9f6647c4f4fc
 record_count_source:
   path: data/traits
   pattern: "*.yaml"

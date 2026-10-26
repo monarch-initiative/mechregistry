@@ -21,9 +21,9 @@ domains:
   - microbiology
   - pathways
 record_type: a natural product chemical structure
-record_count: 3115
-record_count_date: 2026-10-19
-record_count_commit: cd8470e4c2c9f9caef0091f520e8754158bc977f
+record_count: 3116
+record_count_date: 2026-10-26
+record_count_commit: 14373517042b407747272446f79953ae86d51fa4
 record_count_source:
   path: data/natural_products
   pattern: "*.yaml"

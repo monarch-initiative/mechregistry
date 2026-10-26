@@ -27,9 +27,9 @@ domains:
   - pathways
   - organisms
 record_type: a gene product and the review of its existing GO annotations
-record_count: 8205
-record_count_date: 2026-10-19
-record_count_commit: 1be8bbaa6a3f6a2d5ff37656565f07939a06c5b3
+record_count: 9088
+record_count_date: 2026-10-26
+record_count_commit: fe302bb372e476d4c1d6911c825e33bb49c23eac
 record_count_source:
   path: genes
   pattern: "*-ai-review.yaml"
