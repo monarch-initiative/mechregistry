@@ -23,8 +23,8 @@ domains:
   - information technology
 record_type: an artificial intelligence concept
 record_count: 1929
-record_count_date: 2026-10-26
-record_count_commit: 621a86ea8e79b0c97585f978b771f5b024a8f691
+record_count_date: 2026-11-02
+record_count_commit: 97c308f4a2560523cbabe9834fc9db7430073727
 record_count_source:
   path: data
   pattern: "*.yaml"

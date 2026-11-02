@@ -23,9 +23,9 @@ domains:
   - chemistry and biochemistry
   - environment
 record_type: a critical mineral, element or secondary resource
-record_count: 663
-record_count_date: 2026-10-26
-record_count_commit: 2d8ce7a1fee97b74098a1faf5a82481ee115123d
+record_count: 673
+record_count_date: 2026-11-02
+record_count_commit: 58145fe45a1916d42a73bb601835b0c52d0e0d09
 record_count_source:
   path: data/records
   pattern: "*.yaml"
