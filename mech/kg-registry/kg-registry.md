@@ -28,7 +28,7 @@ record_type: >-
   a knowledge resource (knowledge graph, data source, ontology, data model or aggregator) and
   its products
 record_count: 1199
-record_count_date: 2026-11-02
+record_count_date: 2026-11-09
 record_count_commit: 006717b631f5ec6b715729aed750c28de6a5d2af
 record_count_source:
   path: resource

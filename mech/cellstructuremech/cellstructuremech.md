@@ -29,8 +29,8 @@ taxon:
   - NCBITaxon:2157
 record_type: a microbial cell structure or multi-protein complex
 record_count: 1022
-record_count_date: 2026-11-02
-record_count_commit: 4efb30b376d650109f5df154cf95fc382e714ca2
+record_count_date: 2026-11-09
+record_count_commit: 6e0cbc219a1a600680373f141efb92f221c02493
 record_count_source:
   path: data/structures
   pattern: "*.yaml"

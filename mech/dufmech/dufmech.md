@@ -22,8 +22,8 @@ domains:
   - microbiology
 record_type: a Pfam domain family of unknown function
 record_count: 8296
-record_count_date: 2026-11-02
-record_count_commit: aa7d08bcf3a9a03879d06cffd075bc083d29788f
+record_count_date: 2026-11-09
+record_count_commit: de2fdf959acb5e7a1cb1e4139e6936f4ffdf5498
 record_count_source:
   path: data/families
   pattern: "*.yaml"

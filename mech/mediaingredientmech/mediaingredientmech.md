@@ -25,9 +25,9 @@ domains:
   - nutrition
   - microbiology
 record_type: a culture-media ingredient
-record_count: 2955
-record_count_date: 2026-11-02
-record_count_commit: b162cb9c567db34296125230b997f5459f44d185
+record_count: 2956
+record_count_date: 2026-11-09
+record_count_commit: f9e11194d768bcf67cd5a9d5aecff540223fa98b
 record_count_source:
   path: data/ingredients
   pattern: "*.yaml"
