@@ -23,7 +23,7 @@ domains:
   - information technology
 record_type: an artificial intelligence concept
 record_count: 1929
-record_count_date: 2026-11-09
+record_count_date: 2026-11-16
 record_count_commit: 78dcdfa7ff0b44ceb19c929e657ee630aea423e0
 record_count_source:
   path: data

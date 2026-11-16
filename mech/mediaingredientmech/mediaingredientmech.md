@@ -26,8 +26,8 @@ domains:
   - microbiology
 record_type: a culture-media ingredient
 record_count: 2956
-record_count_date: 2026-11-09
-record_count_commit: f9e11194d768bcf67cd5a9d5aecff540223fa98b
+record_count_date: 2026-11-16
+record_count_commit: 24d76baa823d7fd07e8ea2596f0cca50e66392e2
 record_count_source:
   path: data/ingredients
   pattern: "*.yaml"

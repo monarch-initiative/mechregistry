@@ -23,8 +23,8 @@ domains:
   - chemistry and biochemistry
 record_type: a microbial pathway mechanism
 record_count: 282
-record_count_date: 2026-11-09
-record_count_commit: 3a407d22ff5d578869af286a42b13be7d9dcf67a
+record_count_date: 2026-11-16
+record_count_commit: 3f03608dd27abb9b92f49706b04c51ce44d205e8
 record_count_source:
   path: data/pathways
   pattern: "*.yaml"

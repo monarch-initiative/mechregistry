@@ -32,9 +32,9 @@ domains:
 taxon:
   - NCBITaxon:9606
 record_type: a human disorder or disorder subtype
-record_count: 4015
-record_count_date: 2026-11-09
-record_count_commit: 6ac2929622e3f393535104a1748f22da0eaafe90
+record_count: 4082
+record_count_date: 2026-11-16
+record_count_commit: a18a0cbb8cf83f98572ffd4e8146a6e0eba1ec0d
 record_count_source:
   path: kb/disorders
   pattern: "*.yaml"
