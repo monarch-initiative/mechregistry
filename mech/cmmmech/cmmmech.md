@@ -24,8 +24,8 @@ domains:
   - environment
 record_type: a critical mineral, element or secondary resource
 record_count: 713
-record_count_date: 2026-11-16
-record_count_commit: 9bf445aea708681be2283b5df346e769de3da623
+record_count_date: 2026-11-23
+record_count_commit: b4266e6202ce391f5e96ba7e11662ae3e53469c1
 record_count_source:
   path: data/records
   pattern: "*.yaml"

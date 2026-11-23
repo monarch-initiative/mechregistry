@@ -22,9 +22,9 @@ domains:
   - machine learning
   - information technology
 record_type: an artificial intelligence concept
-record_count: 1929
-record_count_date: 2026-11-16
-record_count_commit: 78dcdfa7ff0b44ceb19c929e657ee630aea423e0
+record_count: 1930
+record_count_date: 2026-11-23
+record_count_commit: 2d9910fad1acb4a193122b9418d910a8a72f7b8a
 record_count_source:
   path: data
   pattern: "*.yaml"

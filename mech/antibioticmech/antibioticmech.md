@@ -24,7 +24,7 @@ domains:
   - microbiology
 record_type: an antimicrobial chemical structure
 record_count: 3125
-record_count_date: 2026-11-16
+record_count_date: 2026-11-23
 record_count_commit: 6ec4c26ca0b650f895b4e3d7d642e5d9eb22dda7
 record_count_source:
   path: data/antibiotics

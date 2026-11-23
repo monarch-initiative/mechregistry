@@ -32,8 +32,8 @@ taxon:
   - NCBITaxon:2157
 record_type: a microbial taxon at species rank or below
 record_count: 626048
-record_count_date: 2026-11-16
-record_count_commit: 6eac9c5aa2055ce0415761ddeb2207e991f33343
+record_count_date: 2026-11-23
+record_count_commit: 112cd752949da0fbb18cdfdeb1663b5dc5514c8f
 record_count_source:
   path: data/taxa
   pattern: "*.yaml"

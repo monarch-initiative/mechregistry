@@ -28,8 +28,8 @@ domains:
   - genomics
 record_type: a protein sequence, structure, function or evolution trait class
 record_count: 429421
-record_count_date: 2026-11-16
-record_count_commit: a9de5cfb9e36b68fd20e4c93be26a52c24e72064
+record_count_date: 2026-11-23
+record_count_commit: 84bf8bb4062f17e99f8461e787e476b634207b4e
 record_count_source:
   path: data/traits
   pattern: "*.yaml"

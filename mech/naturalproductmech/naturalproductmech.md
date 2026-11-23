@@ -22,8 +22,8 @@ domains:
   - pathways
 record_type: a natural product chemical structure
 record_count: 3136
-record_count_date: 2026-11-16
-record_count_commit: cc7cfd5c4ae657b2eb7d95ac25c347ef26c1d86c
+record_count_date: 2026-11-23
+record_count_commit: bb763332f46c3d041b4481ad2ec642a3ea4475a3
 record_count_source:
   path: data/natural_products
   pattern: "*.yaml"

@@ -26,7 +26,7 @@ taxon:
   - NCBITaxon:2157
 record_type: a microbial habitat or environment
 record_count: 3209
-record_count_date: 2026-11-16
+record_count_date: 2026-11-23
 record_count_commit: 61edb3d0ae912e8f041378e669928051fbbd509e
 record_count_source:
   path: data/habitats
